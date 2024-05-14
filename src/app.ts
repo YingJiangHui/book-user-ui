@@ -23,6 +23,7 @@ export const request: RequestConfig = {
   // other axios options you want
   errorConfig: {
     errorHandler(error: any, opts) {
+      console.log(error, "error");
       const data = error?.response?.data as
         | API.Common.Result<unknown>
         | undefined;
@@ -35,14 +36,13 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (url, config) => {
       const token = storage.get("token");
-      console.log(token ? JSON.parse(token) : undefined, "token");
       return {
         url: url,
         options: {
           ...config,
           headers: {
             ...config.headers,
-            Authorization: token ? `Bearer ${JSON.parse(token)}` : "",
+            Authorization: token ? `Bearer ${token}` : "",
           },
         },
       };
