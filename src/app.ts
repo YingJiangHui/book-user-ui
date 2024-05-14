@@ -9,23 +9,25 @@ import { RequestConfig } from "@umijs/max";
 import { Toast } from "antd-mobile";
 import { storage } from "@/utils/store";
 
-export async function getInitialState(): Promise<{ name: string }> {
-  getBooks().then((res) => {
-    console.log(res, res);
-  });
-  getUsers().catch((e) => {
-    console.log(e, "e2");
-  });
-  return { name: "@umijs/max" };
+type InitialStateType = {
+  userInfo?: any;
+};
+
+export async function getInitialState(): Promise<InitialStateType> {
+  const userInfo = {};
+
+  return { userInfo };
 }
 export const request: RequestConfig = {
   timeout: 2000,
   // other axios options you want
   errorConfig: {
     errorHandler(error: any, opts) {
-      const data = error.response.data as API.Common.Result<unknown>;
+      const data = error?.response?.data as
+        | API.Common.Result<unknown>
+        | undefined;
       if (opts?.skipErrorHandler) throw error;
-      Toast.show(data.message);
+      if (data?.message) Toast.show(data?.message);
       throw error.response.data;
     },
     errorThrower(e) {},
@@ -33,13 +35,14 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (url, config) => {
       const token = storage.get("token");
+      console.log(token ? JSON.parse(token) : undefined, "token");
       return {
         url: url,
         options: {
           ...config,
           headers: {
             ...config.headers,
-            Authorization: token ? `Bearer ${token}` : "",
+            Authorization: token ? `Bearer ${JSON.parse(token)}` : "",
           },
         },
       };

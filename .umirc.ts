@@ -30,7 +30,20 @@ export default defineConfig({
   routes: [
     { path: "/", component: "index" },
     { path: "/docs", component: "docs" },
-    { path: "/login", component: "auth/login/index", layout: false },
+    {
+      path: "/",
+      component: "auth/layouts/index",
+      layout: false,
+      routes: [
+        { path: "/login", component: "auth/login/index", layout: false },
+        { path: "/register", component: "auth/register/index", layout: false },
+        {
+          path: "/forget-password",
+          component: "auth/forgetPassword/index",
+          layout: false,
+        },
+      ],
+    },
   ],
   npmClient: "pnpm",
   proxy: {
