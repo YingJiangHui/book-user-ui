@@ -8,7 +8,7 @@
     "postinstall": "max setup",
     "prepare": "husky",
     "setup": "max setup",
-    "start": "npm run dev"
+    "start": "pnpm dev"
   },
   "dependencies": {
     "@umijs/max": "^4.2.2",

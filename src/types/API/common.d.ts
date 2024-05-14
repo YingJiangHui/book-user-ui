@@ -3,7 +3,7 @@ namespace API {
     type Result<T> = {
       code: number;
       message: string;
-      data?: T;
+      data: T;
       success: boolean;
     };
   }

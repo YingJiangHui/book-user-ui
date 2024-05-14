@@ -1,7 +1,7 @@
 import React, { memo } from "react";
-import { Button, Form, Input, Space } from "antd-mobile";
+import { Button, Form, Input, Space, Toast } from "antd-mobile";
 import { ContentOutline } from "antd-mobile-icons";
-import { Link } from "@@/exports";
+import { Link, history, useSearchParams, useMatch } from "@@/exports";
 import { LoginReq, postLogin } from "@/service/auth";
 import { useLoading } from "@/hooks/useLoading";
 import { useModel } from "@@/plugin-model";
@@ -10,12 +10,17 @@ type props = {};
 export type LoginPageProps = props;
 export const LoginPage: React.FC<React.PropsWithChildren<LoginPageProps>> =
   memo((props) => {
+    const [searchParams] = useSearchParams();
+
     const userModel = useModel("userModel");
     console.log(userModel.user);
     const [onFinish, loading] = useLoading(async (values: LoginReq) => {
       console.log(values);
       const res = await postLogin(values);
-      if (res.data) userModel.setToken(res.data);
+      Toast.show("登录成功");
+      userModel.setToken(res.data);
+      const redirectTo = searchParams.get("redirectTo");
+      history.replace({ pathname: redirectTo ? redirectTo : "/" });
     });
     return (
       <>
@@ -54,13 +59,13 @@ export const LoginPage: React.FC<React.PropsWithChildren<LoginPageProps>> =
             name={"email"}
             rules={[{ required: true, message: "请填写电子邮箱" }]}
           >
-            <Input placeholder={"请填写电子邮箱"} />
+            <Input placeholder={"电子邮箱"} />
           </Form.Item>
           <Form.Item
             name={"password"}
-            rules={[{ required: true, message: "请输入账号密码" }]}
+            rules={[{ required: true, message: "请填写登录密码" }]}
           >
-            <Input placeholder={"请输入账号密码"} />
+            <Input type={"password"} placeholder={"登录密码"} />
           </Form.Item>
         </Form>
       </>

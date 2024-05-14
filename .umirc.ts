@@ -31,11 +31,16 @@ export default defineConfig({
     { path: "/", component: "index" },
     { path: "/docs", component: "docs" },
     {
-      path: "/",
+      // path: "/auth",
       component: "auth/layouts/index",
       layout: false,
       routes: [
-        { path: "/login", component: "auth/login/index", layout: false },
+        {
+          path: "/login",
+          name: "ccs",
+          component: "auth/login/index",
+          layout: false,
+        },
         { path: "/register", component: "auth/register/index", layout: false },
         {
           path: "/forget-password",
