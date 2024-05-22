@@ -18,6 +18,7 @@ export async function getInitialState(): Promise<InitialStateType> {
 
   return { userInfo };
 }
+
 export const request: RequestConfig = {
   timeout: 2000,
   // other axios options you want
@@ -47,6 +48,5 @@ export const request: RequestConfig = {
         },
       };
     },
-  ],
-  responseInterceptors: [],
+  ]
 };

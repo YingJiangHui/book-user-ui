@@ -7,7 +7,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   request: {
-    dataField: "",
+    dataField: "data",
   },
   layout: false,
   extraPostCSSPlugins: [
@@ -28,8 +28,28 @@ export default defineConfig({
     }),
   ],
   routes: [
-    { path: "/", component: "index" },
+    { path: "/", component: "index", redirect: "/home" },
     { path: "/docs", component: "docs" },
+    {
+      path: "/home",
+      component: "home/home",
+      name: "主页",
+    },
+    {
+      path: "/category",
+      component: "category/category",
+      name: "图书分类",
+    },
+    {
+      path: "/shelf",
+      component: "shelf/shelf",
+      name: "我的书架",
+    },
+    {
+      path: "/my-page",
+      component: "myPage/myPage",
+      name: "我的",
+    },
     {
       // path: "/auth",
       component: "auth/layouts/index",
