@@ -19,7 +19,7 @@ namespace API {
 
       description: string;
 
-      libraryId: number;
+      library: API.Library.Instance;
     }
     type CreateParams = Omit<Instance, 'files'> & { [key: string]: any };
     interface ListParams {}

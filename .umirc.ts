@@ -31,6 +31,12 @@ export default defineConfig({
     { path: "/", component: "index", redirect: "/home" },
     { path: "/docs", component: "docs" },
     {
+      path: "/books/:id",
+      component: "book/detail/detail",
+      name: "图书详情",
+      layout: false,
+    },
+    {
       path: "/home",
       component: "home/home",
       name: "主页",

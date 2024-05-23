@@ -37,9 +37,9 @@ export const CategoryPage: React.FC<
               <SideBar.Item key={item.key} title={item.title} />
             ))}
         </SideBar>
-        <div className={classNames(styles.content, styles.active)}>
-          <BooksList categoryId={Number(activeKey)} />
-        </div>
+      </div>
+      <div className={classNames(styles.content)}>
+        <BooksList categoryId={Number(activeKey)} />
       </div>
     </div>
   );
