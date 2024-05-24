@@ -1,6 +1,6 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { SideBar } from "antd-mobile";
-import { useRequest } from "@@/exports";
+import { useRequest, useSearchParams } from "@@/exports";
 import { getAllCategories, getCategories } from "@/service/categroy";
 import styles from "./index.less";
 import classNames from "classnames";
@@ -25,12 +25,14 @@ export type CategoryPageProps = props;
 export const CategoryPage: React.FC<
   React.PropsWithChildren<CategoryPageProps>
 > = memo((props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const categoriesReq = useRequest(getAllCategories);
-  const [activeKey, setActiveKey] = useState("1");
   return (
     <div className={styles.container}>
       <div className={styles.side}>
-        <SideBar activeKey={activeKey} onChange={setActiveKey}>
+        <SideBar activeKey={searchParams.get("activeKey")} onChange={(key)=>{
+          setSearchParams({activeKey: key})
+        }}>
           {categoriesReq.data
             ?.map((item) => ({ key: item.id, title: item.categoryName }))
             .map((item) => (
@@ -39,7 +41,7 @@ export const CategoryPage: React.FC<
         </SideBar>
       </div>
       <div className={classNames(styles.content)}>
-        <BooksList categoryId={Number(activeKey)} />
+        <BooksList categoryId={Number(searchParams.get("activeKey"))} />
       </div>
     </div>
   );

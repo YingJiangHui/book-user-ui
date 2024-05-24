@@ -14,5 +14,6 @@ namespace API {
       data: T;
       success: boolean;
     };
+    type Option = { value: any; label: any };
   }
 }
