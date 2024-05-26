@@ -26,13 +26,20 @@ export const CategoryPage: React.FC<
   React.PropsWithChildren<CategoryPageProps>
 > = memo((props) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoriesReq = useRequest(getAllCategories);
+  const categoriesReq = useRequest(getAllCategories, {
+    onSuccess: (res) => {
+      setSearchParams({ activeKey: res?.[0]?.id.toString() });
+    },
+  });
   return (
     <div className={styles.container}>
       <div className={styles.side}>
-        <SideBar activeKey={searchParams.get("activeKey")} onChange={(key)=>{
-          setSearchParams({activeKey: key})
-        }}>
+        <SideBar
+          activeKey={searchParams.get("activeKey")}
+          onChange={(key) => {
+            setSearchParams({ activeKey: key });
+          }}
+        >
           {categoriesReq.data
             ?.map((item) => ({ key: item.id, title: item.categoryName }))
             .map((item) => (

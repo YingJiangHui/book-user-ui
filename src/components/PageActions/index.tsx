@@ -3,8 +3,8 @@ import classNames from "classnames";
 import "./index.less";
 
 type props = {
-  actions: React.ReactNode[];
-  description: React.ReactNode;
+  actions?: React.ReactNode[];
+  description?: React.ReactNode;
 };
 export type PageActionsProps = props;
 

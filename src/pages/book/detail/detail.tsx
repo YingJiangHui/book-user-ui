@@ -1,11 +1,14 @@
-import React, { memo, useState } from "react";
-import { useParams, useRequest } from "@@/exports";
+import React, { memo, useCallback, useMemo, useState } from "react";
+import { useNavigate, useParams, useRequest } from "@@/exports";
 import { getBook } from "@/service/book";
 import { Button, Image, ImageViewer, List, Space, Swiper } from "antd-mobile";
 import { FallbackBookImage } from "@/components/FallbackBookImage";
 import styles from "./index.less";
 import { Descriptions } from "@/components/Descriptions/description";
 import { PageActions } from "@/components/PageActions";
+import { isWithinRange } from "@/utils/utils";
+import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
+import { data } from "@umijs/utils/compiled/cheerio/lib/api/attributes";
 type props = {};
 export type BookDetailProps = props;
 export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
@@ -15,7 +18,105 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
     const bookReq = useRequest(getBook, {
       defaultParams: [{ id: params.id! }],
     });
+    const userLocationInRange = useUserLocationInRange(
+      bookReq.data?.library.latitude,
+      bookReq.data?.library.longitude,
+      bookReq.data?.library.longitude
+    );
+    const navigate = useNavigate();
     const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
+    const ActionUI = useMemo(() => {
+      const addBookToBookList = () => {};
+      const borrowBook = () => {
+        navigate({
+          pathname: `/book/borrow-confirm`,
+          search: `bookIds=${params.id}`,
+        });
+      };
+      const reserveBook = () => {
+        navigate({
+          pathname: `/book/reserve-confirm`,
+          search: `bookIds=${params.id}`,
+        });
+      };
+      if (bookReq.loading) {
+        return;
+      }
+      if (userLocationInRange.error) {
+        return <PageActions description={"定位获取失败，请设置浏览器定位权限"} />;
+      }
+      if (!userLocationInRange.location) {
+        return (
+          <PageActions
+            description={"定位中..."}
+            actions={[
+              <Button
+                color={"primary"}
+                fill={"outline"}
+                style={{ borderRadius: "0px" }}
+                loading={true}
+              >
+                加入书单
+              </Button>,
+              <Button
+                color={"primary"}
+                style={{ borderRadius: "0px" }}
+                loading={true}
+              >
+                立即借阅
+              </Button>,
+            ]}
+          />
+        );
+      }
+      if (userLocationInRange.isInRange) {
+        return (
+          <PageActions
+            description={"定位不在图书馆范围只可进行预约操作"}
+            actions={[
+              <Button
+                color={"primary"}
+                fill={"outline"}
+                style={{ borderRadius: "0px" }}
+                onClick={addBookToBookList}
+              >
+                加入书单
+              </Button>,
+              <Button
+                color={"primary"}
+                style={{ borderRadius: "0px" }}
+                onClick={borrowBook}
+              >
+                立即借阅
+              </Button>,
+            ]}
+          />
+        );
+      } else {
+        return (
+          <PageActions
+            description={"定位不在图书馆范围只可进行预约操作"}
+            actions={[
+              <Button
+                color={"primary"}
+                fill={"outline"}
+                style={{ borderRadius: "0px" }}
+                onClick={addBookToBookList}
+              >
+                加入书单
+              </Button>,
+              <Button
+                color={"primary"}
+                style={{ borderRadius: "0px" }}
+                onClick={reserveBook}
+              >
+                预约图书
+              </Button>,
+            ]}
+          />
+        );
+      }
+    }, [userLocationInRange, bookReq.loading]);
     return (
       <>
         <div className={styles.bookDetail}>
@@ -77,21 +178,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
             }}
           />
         </div>
-        <PageActions
-          description={"定位不在图书馆范围只可进行预约操作"}
-          actions={[
-            <Button
-              color={"primary"}
-              fill={"outline"}
-              style={{ borderRadius: "0px" }}
-            >
-              加入书单
-            </Button>,
-            <Button color={"primary"} style={{ borderRadius: "0px" }}>
-              预约图书
-            </Button>,
-          ]}
-        />
+        {ActionUI}
       </>
     );
   });

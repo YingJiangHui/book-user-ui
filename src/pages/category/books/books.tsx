@@ -22,7 +22,13 @@ export const BooksList: React.FC<React.PropsWithChildren<BooksListProps>> =
     return (
       <div className={styles.bookList}>
         {booksByCategoryReq.data?.map((item) => {
-          return <BookListCard key={item.id} data={item} onClick={() => history.push(`/books/${item.id}`)} />;
+          return (
+            <BookListCard
+              key={item.id}
+              data={item}
+              onClick={() => history.push(`/books/${item.id}`)}
+            />
+          );
         })}
       </div>
     );
