@@ -2,8 +2,10 @@ import React, { memo } from "react";
 import { Button, Form, Input, Space, Toast } from "antd-mobile";
 import { Link, history, useSearchParams } from "@@/exports";
 import {
-  resetPassword,
-  resetPasswordReq,
+    LoginReq,
+    postLogin,
+    resetPassword,
+    resetPasswordReq,
 } from "@/service/auth";
 import { useLoading } from "@/hooks/useLoading";
 import { useModel } from "@@/plugin-model";
@@ -16,9 +18,9 @@ export const LoginPage: React.FC<React.PropsWithChildren<LoginPageProps>> =
 
     const userModel = useModel("userModel");
     console.log(userModel.user);
-    const [onFinish, loading] = useLoading(async (values: resetPasswordReq) => {
+    const [onFinish, loading] = useLoading(async (values: LoginReq) => {
       console.log(values);
-      const res = await resetPassword(values);
+      const res = await postLogin(values);
       Toast.show("登录成功");
       userModel.setToken(res.data);
       const redirectTo = searchParams.get("redirectTo");

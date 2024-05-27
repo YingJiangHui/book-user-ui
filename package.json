@@ -16,9 +16,12 @@
     "antd-mobile": "^5.36.0",
     "antd-mobile-icons": "^0.3.0",
     "classnames": "^2.5.1",
-    "postcss-px-to-viewport": "^1.1.1"
+    "dayjs": "^1.11.11",
+    "postcss-px-to-viewport": "^1.1.1",
+    "qs": "^6.12.1"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.15",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
     "husky": "^9",

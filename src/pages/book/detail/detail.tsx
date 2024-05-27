@@ -29,13 +29,13 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       const addBookToBookList = () => {};
       const borrowBook = () => {
         navigate({
-          pathname: `/book/borrow-confirm`,
+          pathname: `/books/borrow-confirm`,
           search: `bookIds=${params.id}`,
         });
       };
       const reserveBook = () => {
         navigate({
-          pathname: `/book/reserve-confirm`,
+          pathname: `/books/reserve-confirm`,
           search: `bookIds=${params.id}`,
         });
       };

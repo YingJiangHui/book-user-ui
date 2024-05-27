@@ -6,8 +6,11 @@
 import { getBooks } from "@/service/book";
 import { getUsers } from "@/service/user";
 import { RequestConfig } from "@umijs/max";
-import { Toast } from "antd-mobile";
+import { Space, Toast } from "antd-mobile";
 import { storage } from "@/utils/store";
+import { stringify } from "qs";
+import { toLogin } from "@/utils/helpers";
+import React from "react";
 
 type InitialStateType = {
   userInfo?: any;
@@ -20,6 +23,7 @@ export async function getInitialState(): Promise<InitialStateType> {
 }
 
 export const request: RequestConfig = {
+  paramsSerializer: (params) => stringify(params, { arrayFormat: "brackets" }),
   timeout: 2000,
   // other axios options you want
   errorConfig: {
@@ -29,7 +33,39 @@ export const request: RequestConfig = {
         | API.Common.Result<unknown>
         | undefined;
       if (opts?.skipErrorHandler) throw error;
-      if (data?.message) Toast.show(data?.message);
+
+      const statusMap: Record<number, () => any> = {
+        401: () => (
+          <Space>
+            {data?.message}
+            <a onClick={toLogin}>立即登录</a>
+          </Space>
+        ),
+        403: () => (
+          <Space>
+            {data?.message}
+            <a onClick={toLogin}>切换账号</a>
+          </Space>
+        ),
+      };
+      const result = statusMap[error.response.status as number]?.();
+      if (
+        error.response.status === 401 &&
+        window.location.pathname === "/login"
+      ) {
+        throw error.response.data;
+      }
+
+      if (React.isValidElement(result)) {
+        Toast.show({
+          content: result,
+        });
+      } else {
+        Toast.show({
+          content: data?.message,
+        });
+      }
+
       throw error.response.data;
     },
     errorThrower(e) {},
@@ -48,5 +84,5 @@ export const request: RequestConfig = {
         },
       };
     },
-  ]
+  ],
 };

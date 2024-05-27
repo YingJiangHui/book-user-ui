@@ -6,4 +6,4 @@ export const getUsers = () =>
   });
 
 export const getUserInfo = () =>
-  request<API.Common.Result<any>>("/api/currentUser");
+  request<API.Common.Result<any>>("/api/user/current");

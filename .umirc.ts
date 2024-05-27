@@ -37,6 +37,18 @@ export default defineConfig({
       layout: false,
     },
     {
+      path: "books/reserve-confirm",
+      component: "reserveConfirm/reserveConfirm",
+      name: "预约确认",
+      layout: false,
+    },
+    {
+      path: "books/borrow-confirm",
+      component: "borrowConfirm/borrowConfirm",
+      name: "借阅确认",
+      layout: false,
+    },
+    {
       path: "/home",
       component: "home/home",
       name: "主页",
@@ -63,13 +75,14 @@ export default defineConfig({
       routes: [
         {
           path: "/login",
-          name: "ccs",
+          name: "登录",
           component: "auth/login/index",
           layout: false,
         },
         { path: "/register", component: "auth/register/index", layout: false },
         {
           path: "/forget-password",
+          name: "注册",
           component: "auth/forgetPassword/index",
           layout: false,
         },
