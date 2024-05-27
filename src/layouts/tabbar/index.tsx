@@ -12,6 +12,7 @@ import { NavBar, TabBar } from "antd-mobile";
 import React from "react";
 import {
   ContentOutline,
+  LocationFill,
   UnorderedListOutline,
   UserOutline,
 } from "antd-mobile-icons";
@@ -60,6 +61,7 @@ export default function Layout() {
           borderBottom: "1px solid rgba(0,0,0,0.1)",
         }}
         backArrow={false}
+        right={<LocationFill color={"red"} />}
       >
         {matches?.[matches?.length - 1]?.route?.name}
       </NavBar>
