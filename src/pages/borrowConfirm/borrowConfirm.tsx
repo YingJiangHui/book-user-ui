@@ -76,21 +76,6 @@ export const borrowConfirm: React.FC<
           return days + 1 + "天";
         }}
       </Form.Item>
-      {/*<Form.Item*/}
-      {/*  name="expectedReturnAt"*/}
-      {/*  label="归还日期"*/}
-      {/*  trigger="onConfirm"*/}
-      {/*  initialValue={defaultDate}*/}
-      {/*  onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {*/}
-      {/*    datePickerRef.current?.open();*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <DatePicker min={now} max={maxDate}>*/}
-      {/*    {(value) =>*/}
-      {/*      value ? dayjs(value).format("YYYY-MM-DD") : "请选择日期"*/}
-      {/*    }*/}
-      {/*  </DatePicker>*/}
-      {/*</Form.Item>*/}
       <Form.Item
         noStyle
         hidden
@@ -102,7 +87,9 @@ export const borrowConfirm: React.FC<
           background: "var(--g-bg-color)",
         }}
       >
-        <div className={"adm-list-header"}>竖直布局表单</div>
+        <div className={"adm-list-header"}>
+          共 <b>{booksReq.data?.data?.data.length}</b> 本
+        </div>
         {booksReq.data?.data?.data?.map((item) => {
           return (
             <BookListCard

@@ -1,21 +1,22 @@
-import { Outlet, history } from "@umijs/max";
-import styles from "./index.less";
-import { NavBar, TabBar } from "antd-mobile";
-import shujia from "../assets/shujia.svg";
-import shujia_primary from "../assets/shujia-primary.svg";
 import {
-  UnorderedListOutline,
-  ContentOutline,
-  UserOutline,
-} from "antd-mobile-icons";
-import React from "react";
-import {
+  history,
   matchRoutes,
+  Outlet,
   useAppData,
   useLocation,
   useNavigate,
   useRouteData,
 } from "@@/exports";
+import styles from "@/layouts/index.less";
+import { NavBar, TabBar } from "antd-mobile";
+import React from "react";
+import {
+  ContentOutline,
+  UnorderedListOutline,
+  UserOutline,
+} from "antd-mobile-icons";
+import shujia_primary from "@/assets/shujia-primary.svg";
+import shujia from "@/assets/shujia.svg";
 const tabs = [
   {
     key: "home",
@@ -45,17 +46,29 @@ const tabs = [
   },
 ];
 export default function Layout() {
-  const navigate = useNavigate();
   const appData = useAppData();
+  const navigate = useNavigate();
+
   const { clientRoutes } = appData;
   const l = useLocation();
   const matches = matchRoutes(clientRoutes, l.pathname);
   return (
-    <>
-      <NavBar style={{ background: "#fff" }} onBack={() => navigate(-1)}>
+    <div className={styles.layout}>
+      <NavBar style={{ background: "#fff" }} backArrow={false}>
         {matches?.[matches?.length - 1]?.route?.name}
       </NavBar>
-      <Outlet />
-    </>
+      <main>
+        <Outlet />
+      </main>
+      <TabBar
+        defaultActiveKey={location.pathname?.split("/")?.filter(Boolean)?.[0]}
+        onChange={(key) => history.replace("/" + key)}
+        safeArea
+      >
+        {tabs.map((item) => (
+          <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
+        ))}
+      </TabBar>
+    </div>
   );
 }

@@ -34,39 +34,42 @@ export default defineConfig({
       path: "/books/:id",
       component: "book/detail/detail",
       name: "图书详情",
-      layout: false,
     },
     {
       path: "books/reserve-confirm",
       component: "reserveConfirm/reserveConfirm",
       name: "预约确认",
-      layout: false,
     },
     {
       path: "books/borrow-confirm",
       component: "borrowConfirm/borrowConfirm",
       name: "借阅确认",
+    },
+    {
+      component: "@/layouts/tabbar/index",
+      routes: [
+        {
+          path: "/home",
+          component: "home/home",
+          name: "主页",
+        },
+        {
+          path: "/category",
+          component: "category/category",
+          name: "图书分类",
+        },
+        {
+          path: "/shelf",
+          component: "shelf/shelf",
+          name: "我的书架",
+        },
+        {
+          path: "/my-page",
+          component: "myPage/myPage",
+          name: "我的",
+        },
+      ],
       layout: false,
-    },
-    {
-      path: "/home",
-      component: "home/home",
-      name: "主页",
-    },
-    {
-      path: "/category",
-      component: "category/category",
-      name: "图书分类",
-    },
-    {
-      path: "/shelf",
-      component: "shelf/shelf",
-      name: "我的书架",
-    },
-    {
-      path: "/my-page",
-      component: "myPage/myPage",
-      name: "我的",
     },
     {
       // path: "/auth",
