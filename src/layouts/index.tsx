@@ -52,7 +52,10 @@ export default function Layout() {
   const matches = matchRoutes(clientRoutes, l.pathname);
   return (
     <>
-      <NavBar style={{ background: "#fff" }} onBack={() => navigate(-1)}>
+      <NavBar
+        style={{ background: "#fff", borderBottom: "1px solid rgba(0,0,0,0.1)" }}
+        onBack={() => navigate(-1)}
+      >
         {matches?.[matches?.length - 1]?.route?.name}
       </NavBar>
       <Outlet />

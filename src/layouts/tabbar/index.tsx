@@ -54,13 +54,23 @@ export default function Layout() {
   const matches = matchRoutes(clientRoutes, l.pathname);
   return (
     <div className={styles.layout}>
-      <NavBar style={{ background: "#fff" }} backArrow={false}>
+      <NavBar
+        style={{
+          background: "#fff",
+          borderBottom: "1px solid rgba(0,0,0,0.1)",
+        }}
+        backArrow={false}
+      >
         {matches?.[matches?.length - 1]?.route?.name}
       </NavBar>
       <main>
         <Outlet />
       </main>
       <TabBar
+        style={{
+          boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.05)",
+          background: "#fff",
+        }}
         defaultActiveKey={location.pathname?.split("/")?.filter(Boolean)?.[0]}
         onChange={(key) => history.replace("/" + key)}
         safeArea
