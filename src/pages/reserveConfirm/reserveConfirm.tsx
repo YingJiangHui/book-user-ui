@@ -7,9 +7,9 @@ import {
   List,
   Toast,
 } from "antd-mobile";
-import {useRouteData, useSearchParams} from "@@/exports";
+import { useNavigate, useRouteData, useSearchParams } from "@@/exports";
 import { useRequest } from "ahooks";
-import { borrowBook, getBooks } from "@/service/book";
+import { borrowBook, getBooks, reserveBook } from "@/service/book";
 import { PageLoading } from "@/components/PageLoading";
 import dayjs from "dayjs";
 import { Calendar } from "@/components/CalendarSelect";
@@ -23,29 +23,28 @@ export const reserveConfirm: React.FC<
   React.PropsWithChildren<borrowConfirmProps>
 > = memo((props) => {
   const [searchParams] = useSearchParams();
-  console.log(searchParams.getAll("bookIds"), 'searchParams.get("bookIds")');
   const startTime = dayjs(searchParams.get("startTime") || now);
   const endTime = startTime.add(40, "day");
   const booksReq = useRequest(getBooks, {
     defaultParams: [{ ids: searchParams.getAll("bookIds") }],
   });
+
+  const navigate = useNavigate();
   if (booksReq.loading) {
     return <PageLoading />;
   }
-  const route = useRouteData();
-  console.log(route)
   return (
     <Form
       // style={{ background: "#fff" }}
-      onFinish={(value) => {
-        borrowBook({
+      onFinish={async (value) => {
+        const [borrowedAt, expectedReturnAt] = value.reserveRange;
+        await reserveBook({
           bookIds: value.ids,
-          borrowedAt: new Date().toISOString(),
-          expectedReturnAt: dayjs(value.expectedReturnAt)
-            .endOf("day")
-            .toISOString(),
+          borrowedAt: borrowedAt.toISOString(),
+          expectedReturnAt: dayjs(expectedReturnAt).endOf("day").toISOString(),
         });
-        console.log(value, "value");
+        Toast.show({ icon: "success", content: "预约成功" });
+        navigate(-1);
       }}
       footer={
         <Button block type="submit" color="primary" size="large">
@@ -66,7 +65,7 @@ export const reserveConfirm: React.FC<
         <Calendar
           allowClear={false}
           selectionMode={"range"}
-          min={startTime}
+          min={startTime.toDate()}
           max={maxDate}
         >
           {(value) =>

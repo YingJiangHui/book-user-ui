@@ -28,10 +28,11 @@ export const CategoryPage: React.FC<
   const [searchParams, setSearchParams] = useSearchParams();
   const categoriesReq = useRequest(getAllCategories, {
     onSuccess: (res) => {
-      setSearchParams(
-        { activeKey: res?.[0]?.id.toString() },
-        { replace: true }
-      );
+      if (!searchParams.get("activeKey"))
+        setSearchParams(
+          { activeKey: res?.[0]?.id.toString() },
+          { replace: true }
+        );
     },
   });
   return (

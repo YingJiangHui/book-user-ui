@@ -37,3 +37,14 @@ export const renewBook = (params: { borrowingIds: number[]; days: number }) => {
     }
   );
 };
+
+export const reserveBook = async (params: {
+  bookIds: number;
+  borrowedAt: string;
+  expectedReturnAt: string;
+}) => {
+  return request<API.Common.Result<API.Book.Instance>>(`/api/books/reservation`, {
+    method: "POST",
+    data: params,
+  });
+};

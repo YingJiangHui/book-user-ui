@@ -1,10 +1,17 @@
 import React, { memo, RefObject, useMemo } from "react";
-import { Button, DatePicker, DatePickerRef, Form, List } from "antd-mobile";
+import {
+  Button,
+  DatePicker,
+  DatePickerRef,
+  Form,
+  List,
+  Toast,
+} from "antd-mobile";
 import { SelectDate } from "@/components/FormFields/SelectDate";
 import dayjs from "dayjs";
 import { useRequest } from "ahooks";
 import { borrowBook, getBooks } from "@/service/book";
-import { history, useSearchParams } from "@@/exports";
+import { history, useNavigate, useSearchParams } from "@@/exports";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
 import { PageLoading } from "@/components/PageLoading";
 import { Calendar } from "@/components/CalendarSelect";
@@ -23,6 +30,8 @@ export const borrowConfirm: React.FC<
   const booksReq = useRequest(getBooks, {
     defaultParams: [{ ids: searchParams.getAll("bookIds") }],
   });
+  const navigate = useNavigate();
+
   if (booksReq.loading) {
     return <PageLoading />;
   }
@@ -37,7 +46,8 @@ export const borrowConfirm: React.FC<
             .endOf("day")
             .toISOString(),
         });
-        console.log(value, "value");
+        Toast.show({ icon: "success", content: "预约成功" });
+        navigate(-1);
       }}
       footer={
         <Button block type="submit" color="primary" size="large">
