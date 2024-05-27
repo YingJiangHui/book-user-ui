@@ -7,18 +7,13 @@ import { borrowBook, getBooks } from "@/service/book";
 import { history, useSearchParams } from "@@/exports";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
 import { PageLoading } from "@/components/PageLoading";
+import { Calendar } from "@/components/CalendarSelect";
 
 type props = {};
 export type borrowConfirmProps = props;
 const now = new Date();
 const defaultDate = dayjs().add(40, "day").toDate();
 const maxDate = dayjs().add(2, "months").toDate();
-
-
-
-
-
-
 
 export const borrowConfirm: React.FC<
   React.PropsWithChildren<borrowConfirmProps>
@@ -38,7 +33,9 @@ export const borrowConfirm: React.FC<
         borrowBook({
           bookIds: value.ids,
           borrowedAt: new Date().toISOString(),
-          expectedReturnAt: value.expectedReturnAt.toISOString(),
+          expectedReturnAt: dayjs(value.expectedReturnAt)
+            .endOf("day")
+            .toISOString(),
         });
         console.log(value, "value");
       }}
@@ -51,18 +48,49 @@ export const borrowConfirm: React.FC<
       <Form.Item
         name="expectedReturnAt"
         label="归还日期"
-        trigger="onConfirm"
+        // trigger="onConfirm"
         initialValue={defaultDate}
         onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {
           datePickerRef.current?.open();
         }}
+        rules={[{ required: true, message: "请选择日期" }]}
       >
-        <DatePicker min={now} max={maxDate}>
+        <Calendar
+          allowClear={false}
+          selectionMode={"single"}
+          min={now}
+          max={maxDate}
+        >
           {(value) =>
-            value ? dayjs(value).format("YYYY-MM-DD") : "请选择日期"
+            value ? dayjs(value).format("YYYY-MM-DD") + " 闭馆前" : "请选择日期"
           }
-        </DatePicker>
+        </Calendar>
       </Form.Item>
+      <Form.Item label="借阅天数" dependencies={["expectedReturnAt"]}>
+        {(form) => {
+          console.log(form.getFieldValue("expectedReturnAt"));
+          const days = dayjs(form.getFieldValue("expectedReturnAt")).diff(
+            dayjs(new Date()),
+            "days"
+          );
+          return days + 1 + "天";
+        }}
+      </Form.Item>
+      {/*<Form.Item*/}
+      {/*  name="expectedReturnAt"*/}
+      {/*  label="归还日期"*/}
+      {/*  trigger="onConfirm"*/}
+      {/*  initialValue={defaultDate}*/}
+      {/*  onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {*/}
+      {/*    datePickerRef.current?.open();*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <DatePicker min={now} max={maxDate}>*/}
+      {/*    {(value) =>*/}
+      {/*      value ? dayjs(value).format("YYYY-MM-DD") : "请选择日期"*/}
+      {/*    }*/}
+      {/*  </DatePicker>*/}
+      {/*</Form.Item>*/}
       <Form.Item
         noStyle
         hidden
