@@ -1,14 +1,21 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams, useRequest } from "@@/exports";
 import { getBook } from "@/service/book";
-import { Button, Image, ImageViewer, List, Space, Swiper } from "antd-mobile";
+import {
+  Button,
+  Image,
+  ImageViewer,
+  List,
+  Space,
+  Swiper,
+  Toast,
+} from "antd-mobile";
 import { FallbackBookImage } from "@/components/FallbackBookImage";
 import styles from "./index.less";
 import { Descriptions } from "@/components/Descriptions/description";
 import { PageActions } from "@/components/PageActions";
-import { isWithinRange } from "@/utils/utils";
 import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
-import { data } from "@umijs/utils/compiled/cheerio/lib/api/attributes";
+import { addBookShelf } from "@/service/bookShelf";
 type props = {};
 export type BookDetailProps = props;
 export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
@@ -26,7 +33,11 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
     const navigate = useNavigate();
     const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
     const ActionUI = useMemo(() => {
-      const addBookToBookList = () => {};
+      const addBookToBookList = () => {
+        addBookShelf({ bookId: params.id! }).then(() => {
+          Toast.show("已书架成功");
+        });
+      };
       const borrowBook = () => {
         navigate({
           pathname: `/books/borrow-confirm`,
@@ -42,8 +53,11 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       if (bookReq.loading) {
         return;
       }
+      console.log(userLocationInRange.error, "userLocationInRange.error");
       if (userLocationInRange.error) {
-        return <PageActions description={"定位获取失败，请设置浏览器定位权限"} />;
+        return (
+          <PageActions description={"定位获取失败，请设置浏览器定位权限"} />
+        );
       }
       if (!userLocationInRange.location) {
         return (
@@ -55,13 +69,15 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 fill={"outline"}
                 style={{ borderRadius: "0px" }}
                 loading={true}
+                onClick={addBookToBookList}
               >
-                加入书单
+                加入书架
               </Button>,
               <Button
                 color={"primary"}
                 style={{ borderRadius: "0px" }}
                 loading={true}
+                onClick={borrowBook}
               >
                 立即借阅
               </Button>,
@@ -80,7 +96,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 style={{ borderRadius: "0px" }}
                 onClick={addBookToBookList}
               >
-                加入书单
+                加入书架
               </Button>,
               <Button
                 color={"primary"}
@@ -103,7 +119,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 style={{ borderRadius: "0px" }}
                 onClick={addBookToBookList}
               >
-                加入书单
+                加入书架
               </Button>,
               <Button
                 color={"primary"}
@@ -134,7 +150,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                     <div>
                       <Image
                         src={file?.url || "none"}
-                        fallback={<FallbackBookImage />}
+                        fallback={<FallbackBookImage width={80} />}
                         alt={"封面"}
                         width={80}
                         onClick={() => {

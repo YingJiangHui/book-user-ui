@@ -28,7 +28,6 @@ export default defineConfig({
     }),
   ],
   routes: [
-    { path: "/", component: "index", redirect: "/home" },
     { path: "/docs", component: "docs" },
     {
       path: "/books/:id",
@@ -82,7 +81,11 @@ export default defineConfig({
           component: "auth/login/index",
           layout: false,
         },
-        { path: "/register", component: "auth/register/index", layout: false },
+        {
+          path: "/register",
+          component: "auth/register/index",
+          layout: false,
+        },
         {
           path: "/forget-password",
           name: "注册",

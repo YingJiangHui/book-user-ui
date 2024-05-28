@@ -1,19 +1,28 @@
-import yayJpg from '../assets/yay.jpg';
-import {useRequest} from "@@/plugin-request";
-import { request } from '@umijs/max';
-import {getBooks} from "@/service/book";
+import { Outlet, useModel, useNavigate } from "@@/exports";
+import { FloatingBubble } from "antd-mobile";
+import shujia_white from "@/assets/shujia-white.svg";
+import React from "react";
 
 export default function HomePage() {
-    useRequest(getBooks)
+  const initialState = useModel("@@initialState");
+  console.log(initialState);
+  const navigate = useNavigate();
   return (
-    <div>
-      <h2>Yay! Welcome to umi2!</h2>
-      <p>
-        <img src={yayJpg} width="388" />
-      </p>
-      <p>
-        To get started, edit <code>pages/index.tsx</code> and save to reload.
-      </p>
-    </div>
+    <>
+      <Outlet />
+      <FloatingBubble
+        onClick={() => {
+          navigate("/shelf");
+        }}
+        style={{
+          overflow: "visible",
+          "--initial-position-bottom": "18vh",
+          "--initial-position-right": "36px",
+          "--edge-distance": "24px",
+        }}
+      >
+        <img src={shujia_white} height={28} />
+      </FloatingBubble>
+    </>
   );
 }

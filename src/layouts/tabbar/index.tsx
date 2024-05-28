@@ -73,7 +73,8 @@ export default function Layout() {
           boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.05)",
           background: "#fff",
         }}
-        defaultActiveKey={location.pathname?.split("/")?.filter(Boolean)?.[0]}
+        activeKey={location.pathname?.split("/")?.filter(Boolean)?.[0]}
+        // defaultActiveKey={location.pathname?.split("/")?.filter(Boolean)?.[0]}
         onChange={(key) => history.replace("/" + key)}
         safeArea
       >

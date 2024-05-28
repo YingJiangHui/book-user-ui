@@ -1,6 +1,6 @@
 import { Outlet, history } from "@umijs/max";
 import styles from "./index.less";
-import { NavBar, TabBar } from "antd-mobile";
+import {FloatingBubble, NavBar, TabBar} from "antd-mobile";
 import shujia from "../assets/shujia.svg";
 import shujia_primary from "../assets/shujia-primary.svg";
 import {
@@ -16,6 +16,7 @@ import {
   useNavigate,
   useRouteData,
 } from "@@/exports";
+import shujia_white from "@/assets/shujia-white.svg";
 const tabs = [
   {
     key: "home",
@@ -59,6 +60,19 @@ export default function Layout() {
         {matches?.[matches?.length - 1]?.route?.name}
       </NavBar>
       <Outlet />
+      <FloatingBubble
+          onClick={() => {
+            navigate("/shelf");
+          }}
+          style={{
+            overflow: "visible",
+            "--initial-position-bottom": "18vh",
+            "--initial-position-right": "36px",
+            "--edge-distance": "24px",
+          }}
+      >
+        <img src={shujia_white} height={28} />
+      </FloatingBubble>
     </>
   );
 }

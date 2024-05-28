@@ -2,16 +2,20 @@ import React, { memo } from "react";
 import image404 from "@/assets/404.svg";
 import { Image } from "antd-mobile";
 
-type props = {};
+type props = {
+  width?: number;
+};
 export type FallbackBookImageProps = props;
 export const FallbackBookImage: React.FC<
   React.PropsWithChildren<FallbackBookImageProps>
 > = memo((props) => {
+
+  const { width = 50 } = props;
   return (
     <div
       style={{
-        width: 50,
-        height: 73,
+        width: width,
+        height: width * 1.46,
         background: "#f5f5f5",
         display: "flex",
         alignItems: "center",

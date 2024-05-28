@@ -9,6 +9,7 @@ import {
 } from "@/service/auth";
 import { useLoading } from "@/hooks/useLoading";
 import { useModel } from "@@/plugin-model";
+import {storage} from "@/utils/store";
 
 type props = {};
 export type LoginPageProps = props;
@@ -16,15 +17,15 @@ export const LoginPage: React.FC<React.PropsWithChildren<LoginPageProps>> =
   memo((props) => {
     const [searchParams] = useSearchParams();
 
-    const userModel = useModel("userModel");
-    console.log(userModel.user);
+      const initialState = useModel('@@initialState');
     const [onFinish, loading] = useLoading(async (values: LoginReq) => {
-      console.log(values);
-      const res = await postLogin(values);
-      Toast.show("登录成功");
-      userModel.setToken(res.data);
-      const redirectTo = searchParams.get("redirectTo");
-      history.replace({ pathname: redirectTo ? redirectTo : "/" });
+        console.log(values);
+        const res = await postLogin(values);
+        Toast.show("登录成功");
+        storage.set('token', res.data);
+        await initialState.refresh();
+        const redirectTo = searchParams.get('redirectTo');
+        history.replace({ pathname: redirectTo ? redirectTo : '/' });
     });
     return (
       <>
