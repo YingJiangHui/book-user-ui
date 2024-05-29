@@ -47,7 +47,7 @@ export const borrowConfirm: React.FC<
             .toISOString(),
           from: searchParams.get("from") || undefined,
         });
-        Toast.show({ icon: "success", content: "预约成功" });
+        Toast.show({ icon: "success", content: "借阅成功" });
         navigate(-1);
       }}
       footer={
