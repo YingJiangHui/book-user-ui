@@ -88,7 +88,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       if (userLocationInRange.isInRange) {
         return (
           <PageActions
-            description={"定位不在图书馆范围只可进行预约操作"}
+            // description={"定位不在图书馆范围只可进行预约操作"}
             actions={[
               <Button
                 color={"primary"}

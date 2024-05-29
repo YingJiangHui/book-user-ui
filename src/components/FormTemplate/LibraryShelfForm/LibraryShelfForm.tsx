@@ -5,6 +5,7 @@ import { PageActions } from "@/components/PageActions";
 import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import { FormInstance } from "antd-mobile/es/components/form";
 import { removeBookShelf } from "@/service/bookShelf";
+import { useSearchParams } from "@@/exports";
 
 export type LibraryShelfFormValues = {
   shelf: number[];
@@ -26,9 +27,34 @@ export const LibraryShelfForm: React.FC<
     data.longitude,
     data.longitude
   );
+  const [searchParams, setSearchParams] = useSearchParams({
+    ["shelf_" + data.id]: [],
+  });
 
   return (
     <Form
+      initialValues={{
+        shelf: searchParams.getAll("shelf_" + data.id).map(Number),
+      }}
+      onValuesChange={(values) => {
+        if (values.shelf) {
+          const params = Array.from(searchParams.keys()).reduce(
+            (result, key) => {
+              Object.assign(result, { [key]: searchParams.getAll(key) });
+              return result;
+            },
+            {}
+          );
+          setSearchParams(
+            {
+              ...params,
+              ["shelf_" + data.id]: values.shelf,
+            },
+            { replace: true }
+          );
+        }
+
+      }}
       onFinish={async (value) => {
         await onFinish(value);
       }}
@@ -67,7 +93,7 @@ export const LibraryShelfForm: React.FC<
               <PageActions
                 shadowed={false}
                 position={"relative"}
-                description={"定位不在图书馆范围只可进行预约操作"}
+                // description={"定位不在图书馆范围只可进行预约操作"}
                 actions={[
                   <Button
                     disabled={!form.getFieldValue("shelf")?.length}
@@ -77,8 +103,21 @@ export const LibraryShelfForm: React.FC<
                       await onDelete?.(form.getFieldValue("shelf"));
                       form.resetFields();
                     }}
+                    // fill={"outline"}
                   >
                     删除图书
+                  </Button>,
+                  <Button
+                    disabled={!form.getFieldValue("shelf")?.length}
+                    type={"submit"}
+                    color={"primary"}
+                    style={{ borderRadius: "0px" }}
+                    onClick={() => {
+                      form.setFieldsValue({ actionType: "RESERVE" });
+                    }}
+                    fill={"outline"}
+                  >
+                    预约图书
                   </Button>,
                   <Button
                     disabled={!form.getFieldValue("shelf")?.length}

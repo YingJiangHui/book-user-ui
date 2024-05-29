@@ -28,15 +28,9 @@ export const BooksInLibraryGroupList: React.FC<
               }
               checked={value?.length === data.books.length}
               onChange={(bool) => {
-                console.log(
-                  "value",
-                  bool,
-                  data.books.map((book) => book.id),
-                  data.books
-                );
                 if (bool) {
                   onChange?.(
-                    data.books.map((book) => book.id),
+                    data.books.map((book) => book.bookId),
                     data.books
                   );
                 } else {
@@ -51,23 +45,22 @@ export const BooksInLibraryGroupList: React.FC<
       {data.books.map((item) => {
         return (
           <BookListCardWithCheckbox
+            key={item.bookId}
             checkboxProps={{
-              checked: value?.includes(item.id),
+              checked: value?.includes(item.bookId),
               onChange: (bool) => {
                 if (bool) {
                   //     删除value中指定元素
-                  const v = value?.concat(item.id);
-                  console.log(v, "v", bool);
+                  const v = value?.concat(item.bookId);
                   onChange?.(
                     v,
-                    data.books.filter((book) => v?.includes(book.id))
+                    data.books.filter((book) => v?.includes(book.bookId))
                   );
                 } else {
-                  const v = value?.filter((id) => id !== item.id);
-                  console.log(v, "v", bool);
+                  const v = value?.filter((id) => id !== item.bookId);
                   onChange?.(
                     v,
-                    data.books.filter((book) => v?.includes(book.id))
+                    data.books.filter((book) => v?.includes(book.bookId))
                   );
                 }
               },

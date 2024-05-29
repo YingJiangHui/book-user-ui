@@ -28,6 +28,7 @@ export default defineConfig({
     }),
   ],
   routes: [
+    { path: "/", redirect: "/home" },
     { path: "/docs", component: "docs" },
     {
       path: "/books/:id",

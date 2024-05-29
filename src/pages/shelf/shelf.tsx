@@ -1,8 +1,8 @@
 import React, { memo } from "react";
-import { useNavigate, useRequest } from "@@/exports";
+import { useNavigate, useRequest, useSearchParams } from "@@/exports";
 import { getBookShelf, removeBookShelf } from "@/service/bookShelf";
 import { BooksInLibraryGroupList } from "@/components/BooksInLibraryGroupList/BooksInLibraryGroupList";
-import { Button, Form, Toast } from "antd-mobile";
+import { Button, Form, Space, Toast } from "antd-mobile";
 import { PageActions } from "@/components/PageActions";
 import {
   LibraryShelfForm,
@@ -38,12 +38,10 @@ export const ShelfPage: React.FC<React.PropsWithChildren<ShelfPageProps>> =
       bookShelfReq.refresh();
     };
     return (
-      <>
+      <Space direction={"vertical"}>
         {bookShelfReq.data?.map((library) => {
           return (
             <LibraryShelfForm
-              key={library.id}
-              onDelete={deleteBook}
               onFinish={async (value) => {
                 console.log(value, "v");
                 if (value.actionType === "BORROW") {
@@ -52,11 +50,12 @@ export const ShelfPage: React.FC<React.PropsWithChildren<ShelfPageProps>> =
                   reserveBook(value);
                 }
               }}
+              onDelete={deleteBook}
               data={library}
             />
           );
         })}
-      </>
+      </Space>
     );
   });
 ShelfPage.displayName = "我的书架";

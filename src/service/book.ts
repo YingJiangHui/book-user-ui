@@ -12,6 +12,7 @@ export const borrowBook = (params: {
   bookIds: number;
   borrowedAt: string;
   expectedReturnAt: string;
+  from?: string;
 }) =>
   request<API.Common.Result<API.Book.Instance>>(`/api/books/borrowing`, {
     method: "POST",
@@ -42,9 +43,13 @@ export const reserveBook = async (params: {
   bookIds: number;
   borrowedAt: string;
   expectedReturnAt: string;
+  from?: string;
 }) => {
-  return request<API.Common.Result<API.Book.Instance>>(`/api/books/reservation`, {
-    method: "POST",
-    data: params,
-  });
+  return request<API.Common.Result<API.Book.Instance>>(
+    `/api/books/reservation`,
+    {
+      method: "POST",
+      data: params,
+    }
+  );
 };

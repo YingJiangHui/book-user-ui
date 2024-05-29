@@ -42,6 +42,7 @@ export const reserveConfirm: React.FC<
           bookIds: value.ids,
           borrowedAt: borrowedAt.toISOString(),
           expectedReturnAt: dayjs(expectedReturnAt).endOf("day").toISOString(),
+          from: searchParams.get("from") || undefined,
         });
         Toast.show({ icon: "success", content: "预约成功" });
         navigate(-1);

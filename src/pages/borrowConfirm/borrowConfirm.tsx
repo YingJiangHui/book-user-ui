@@ -38,13 +38,14 @@ export const borrowConfirm: React.FC<
   return (
     <Form
       // style={{ background: "#fff" }}
-      onFinish={(value) => {
-        borrowBook({
+      onFinish={async (value) => {
+        await borrowBook({
           bookIds: value.ids,
           borrowedAt: new Date().toISOString(),
           expectedReturnAt: dayjs(value.expectedReturnAt)
             .endOf("day")
             .toISOString(),
+          from: searchParams.get("from") || undefined,
         });
         Toast.show({ icon: "success", content: "预约成功" });
         navigate(-1);
