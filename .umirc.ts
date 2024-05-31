@@ -30,6 +30,18 @@ export default defineConfig({
   routes: [
     { path: "/", redirect: "/home" },
     { path: "/docs", component: "docs" },
+    { path: "/borrowing", component: "borrowing/borrowing", name: "借阅中" },
+    {
+      path: "/reservation",
+      component: "reservation/reservation",
+      name: "预约中",
+    },
+    {
+      path: "/borrowing/history",
+      component: "borrowing/history/borrowingHistory",
+      name: "借阅历史",
+    },
+    { path: "/manual", component: "manual/manual", name: "用户手册" },
     {
       path: "/books/:id",
       component: "book/detail/detail",

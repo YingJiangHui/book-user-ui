@@ -8,6 +8,7 @@ export const useUserLocationInRange = (
   range?: number
 ) => {
   const { location, error } = useGeolocation([]);
+
   return useMemo(
     () => ({
       isInRange: isWithinRange(
@@ -17,6 +18,14 @@ export const useUserLocationInRange = (
         lat,
         lon
       ),
+      inRange: (lat?: number, lon?: number, range?: number) =>
+        isWithinRange(
+          location?.coords.latitude,
+          location?.coords.longitude,
+          range,
+          lat,
+          lon
+        ),
       location,
       error,
     }),

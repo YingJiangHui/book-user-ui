@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { Checkbox } from "antd-mobile";
 import { BookListCardWithCheckbox } from "@/components/BookListCardWithCheckbox/BookListCardWithCheckbox";
 import "./booksInLibraryGroupList.less";
+import { BookListCard } from "@/components/BookListCard/BookListCard";
 
 type props = {
   data: API.BookShelf.Instance;
@@ -46,27 +47,27 @@ export const BooksInLibraryGroupList: React.FC<
         return (
           <BookListCardWithCheckbox
             key={item.bookId}
-            checkboxProps={{
-              checked: value?.includes(item.bookId),
-              onChange: (bool) => {
-                if (bool) {
-                  //     删除value中指定元素
-                  const v = value?.concat(item.bookId);
-                  onChange?.(
-                    v,
-                    data.books.filter((book) => v?.includes(book.bookId))
-                  );
-                } else {
-                  const v = value?.filter((id) => id !== item.bookId);
-                  onChange?.(
-                    v,
-                    data.books.filter((book) => v?.includes(book.bookId))
-                  );
-                }
-              },
+            checked={value?.includes(item.bookId)}
+            onChange={(bool) => {
+              if (bool) {
+                //     删除value中指定元素
+                const v = value?.concat(item.bookId);
+                onChange?.(
+                  v,
+                  data.books.filter((book) => v?.includes(book.bookId))
+                );
+              } else {
+                const v = value?.filter((id) => id !== item.bookId);
+                onChange?.(
+                  v,
+                  data.books.filter((book) => v?.includes(book.bookId))
+                );
+              }
             }}
-            data={item}
-          />
+            value={item.id}
+          >
+            <BookListCard data={item} />
+          </BookListCardWithCheckbox>
         );
       })}
     </div>
