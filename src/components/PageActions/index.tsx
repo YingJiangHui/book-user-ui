@@ -7,15 +7,25 @@ type props = {
   description?: React.ReactNode;
   position?: CSSProperties["position"];
   shadowed?: boolean;
+  isPlaceholder?: boolean;
 };
 export type PageActionsProps = props;
 
 export const PageActions: React.FC<React.PropsWithChildren<PageActionsProps>> =
   memo((props) => {
-    const { shadowed = true, actions, description, position } = props;
+    const {
+      shadowed = true,
+      isPlaceholder: _isPlaceholder = true,
+      actions,
+      description,
+      position,
+    } = props;
+    const isPlaceholder = position === "relative" ? false : _isPlaceholder;
     return (
       <>
-        <div className={"page-actions__placeholder"}></div>
+        {isPlaceholder ? (
+          <div className={"page-actions__placeholder"}></div>
+        ) : undefined}
         <div
           className={classNames("page-actions")}
           style={{
