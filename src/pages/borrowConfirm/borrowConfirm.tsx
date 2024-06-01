@@ -20,7 +20,7 @@ type props = {};
 export type borrowConfirmProps = props;
 const now = new Date();
 const defaultDate = dayjs().add(40, "day").toDate();
-const maxDate = dayjs().add(2, "months").toDate();
+const maxDate = dayjs().add(90, "days").toDate();
 
 export const borrowConfirm: React.FC<
   React.PropsWithChildren<borrowConfirmProps>

@@ -7,32 +7,32 @@ import dayjs from "dayjs";
 import { Constants } from "@/constants";
 
 type props = {
-  data: API.Reservation.Instance;
+  data: API.Borrowing.Instance;
 };
-export type BookListCardReservationProps = props;
-export const BookListCardReservation: React.FC<
-  React.PropsWithChildren<BookListCardReservationProps>
+export type BookListCardBorrowingProps = props;
+export const BookListCardBorrowing: React.FC<
+  React.PropsWithChildren<BookListCardBorrowingProps>
 > = memo((props) => {
   const { data, ...rest } = props;
   const { title, files, author, publishedYear, library, isbn } = data.book;
-  const diffDisplay = useMemo(() => {
-    const d = dayjs(data.borrowedAt).diff(new Date(), "day");
+  const statusStatus = useMemo(() => {
+    const d = dayjs(data.expectedReturnAt).diff(new Date(), "day");
 
     switch (data.status) {
-      case "BORROWABLE":
-        return `请在${dayjs(data.borrowedAt)
-          .add(3, "days")
-          .format("MM月DD日")}闭馆前取书`;
-      case "NOT_BORROWABLE":
-        return `${d}天后可取书`;
-      case "CANCELLED":
-        break;
-      case "FULFILLED":
-        break;
-      case "EXPIRED":
-        break;
+      case "RETURNED":
+        return { text: `已归还`, color: "success" };
+      case "OVERDUE_NOT_RETURNED":
+        return { text: `已逾期${Math.abs(d)}天`, color: "danger" };
+      case "NOT_RETURNED":
+        return {
+          text: `${dayjs(data.expectedReturnAt).format(
+            "MM月DD日"
+          )}闭馆前归还`,
+          color: "warning",
+        };
+      case "OVERDUE_RETURNED":
+        return { text: `已归还（逾期归还）`, color: "success" };
     }
-    return Constants.Reservation.ReservationStatusMapToStyle[data.status].text;
   }, [data.borrowedAt, data.status]);
   return (
     <div className={classNames("book-list-card")} {...rest}>
@@ -51,12 +51,9 @@ export const BookListCardReservation: React.FC<
               <Tag
                 style={{ padding: "3px 6px" }}
                 round
-                color={
-                  Constants.Reservation.ReservationStatusMapToStyle[data.status]
-                    .status
-                }
+                color={statusStatus.color}
               >
-                {diffDisplay}
+                {statusStatus.text}
               </Tag>
             }
             {title}
@@ -65,12 +62,18 @@ export const BookListCardReservation: React.FC<
         <p>作者：{author}</p>
         <p>所属图书馆：{library?.name}</p>
         <p>
-          预约时间：
+          借阅日期：
           {dayjs(data.borrowedAt).format("YYYY-MM-DD")} 至{" "}
-          {dayjs(data.returnedAt).format("YYYY-MM-DD")}
+          {dayjs(data.expectedReturnAt).format("YYYY-MM-DD")}
         </p>
+        {data.returnedAt ? (
+          <p>
+            归还日期：
+            {dayjs(data.returnedAt).format("YYYY-MM-DD")}
+          </p>
+        ) : undefined}
       </div>
     </div>
   );
 });
-BookListCardReservation.displayName = "图书卡片用于预约时";
+BookListCardBorrowing.displayName = "图书卡片用于预约时";

@@ -72,7 +72,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                 color={"primary"}
                 style={{ borderRadius: "0px" }}
               >
-                图书借阅
+                完成借阅
               </Button>
             );
             if (Object.keys(libraryMap || {}).length === 0) {
@@ -84,7 +84,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                       color={"primary"}
                       style={{ borderRadius: "0px" }}
                     >
-                      图书借阅
+                      完成借阅
                     </Button>,
                   ]}
                 />
@@ -119,7 +119,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                       style={{ borderRadius: "0px" }}
                       loading={true}
                     >
-                      图书借阅
+                      完成借阅
                     </Button>,
                   ]}
                 />
@@ -141,7 +141,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                       color={"primary"}
                       style={{ borderRadius: "0px" }}
                     >
-                      图书借阅
+                      完成借阅
                     </Button>,
                   ]}
                 />

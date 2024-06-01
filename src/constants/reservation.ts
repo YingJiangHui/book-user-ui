@@ -6,7 +6,7 @@ const ReservationStatusMapToStyle: Record<
   BORROWABLE: { text: "待取书", status: "warning" },
   CANCELLED: { text: "已取消", status: "default" },
   FULFILLED: { text: "已取书", status: "success" },
-  EXPIRED: { text: "逾期未借阅", status: "danger" },
+  EXPIRED: { text: "未按时取书", status: "danger" },
 };
 
 const ReservationStatusOption: {
