@@ -34,7 +34,7 @@ export default defineConfig({
     {
       path: "/reservation",
       component: "reservation/reservation",
-      name: "预约中",
+      name: "预约记录",
     },
     {
       path: "/borrowing/history",

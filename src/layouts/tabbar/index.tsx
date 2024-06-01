@@ -63,9 +63,9 @@ export default function Layout() {
         backArrow={false}
         right={<LocationFill color={"red"} />}
       >
-        {matches?.[matches?.length - 1]?.route?.name}
+        {(matches?.[matches?.length - 1]?.route as any)?.name}
       </NavBar>
-      <main>
+      <main className={styles.main}>
         <Outlet />
       </main>
       <TabBar

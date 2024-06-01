@@ -22,7 +22,7 @@ export const BookListCardReservation: React.FC<
       case "BORROWABLE":
         return `请在${dayjs(data.borrowedAt)
           .add(3, "days")
-          .format("MM月DD日")}号前取书`;
+          .format("MM月DD日")}号闭馆前取书`;
       case "NOT_BORROWABLE":
         return `${d}天后可取书`;
       case "CANCELLED":

@@ -23,8 +23,20 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
       );
     };
     const userLocationInRange = useUserLocationInRange();
+    const [form] = Form.useForm();
     return (
-      <Form>
+      <Form
+        form={form}
+        onFinish={(values) => {
+          borrowBookFormReservations({
+            reservationIds: values.reservationIds,
+          }).then(() => {
+            Toast.show("借阅成功");
+            form.resetFields();
+            reservationsReq.refresh();
+          });
+        }}
+      >
         <Form.Item noStyle name={"reservationIds"}>
           <Checkbox.Group
             onChange={(v) => {
@@ -33,7 +45,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
           >
             {reservationsReq.data?.map((item) => (
               <BookListCardWithCheckbox
-                disabled={dayjs(item.borrowedAt).diff(new Date(), "day") <= -3}
+                disabled={item.status !== "BORROWABLE"}
                 value={item.id}
                 key={item.id}
               >
@@ -128,14 +140,6 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                       type={"submit"}
                       color={"primary"}
                       style={{ borderRadius: "0px" }}
-                      onClick={() => {
-                        borrowBookFormReservations({ reservationIds }).then(
-                          () => {
-                            Toast.show("借阅成功");
-                            reservationsReq.refresh();
-                          }
-                        );
-                      }}
                     >
                       图书借阅
                     </Button>,
@@ -145,7 +149,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
             } else {
               return (
                 <PageActions
-                  description={"定位不在图书馆范围只可进行预约操作"}
+                  description={"定位不在图书馆范围，无法借阅"}
                   actions={[defaultUI]}
                 />
               );

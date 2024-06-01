@@ -1,6 +1,6 @@
 import { Outlet, history } from "@umijs/max";
 import styles from "./index.less";
-import {FloatingBubble, NavBar, TabBar} from "antd-mobile";
+import { FloatingBubble, NavBar, TabBar } from "antd-mobile";
 import shujia from "../assets/shujia.svg";
 import shujia_primary from "../assets/shujia-primary.svg";
 import {
@@ -52,27 +52,33 @@ export default function Layout() {
   const l = useLocation();
   const matches = matchRoutes(clientRoutes, l.pathname);
   return (
-    <>
+    <div className={styles.layout}>
       <NavBar
-        style={{ background: "#fff", borderBottom: "1px solid rgba(0,0,0,0.1)" }}
+        style={{
+          background: "#fff",
+          borderBottom: "1px solid rgba(0,0,0,0.1)",
+        }}
         onBack={() => navigate(-1)}
       >
+        {/*@ts-ignore*/}
         {matches?.[matches?.length - 1]?.route?.name}
       </NavBar>
-      <Outlet />
-      <FloatingBubble
-          onClick={() => {
-            navigate("/shelf");
-          }}
-          style={{
-            overflow: "visible",
-            "--initial-position-bottom": "18vh",
-            "--initial-position-right": "36px",
-            "--edge-distance": "24px",
-          }}
-      >
-        <img src={shujia_white} height={28} />
-      </FloatingBubble>
-    </>
+      <main>
+        <Outlet />
+        <FloatingBubble
+            onClick={() => {
+              navigate("/shelf");
+            }}
+            style={{
+              overflow: "visible",
+              "--initial-position-bottom": "18vh",
+              "--initial-position-right": "36px",
+              "--edge-distance": "24px",
+            }}
+        >
+          <img src={shujia_white} height={28} />
+        </FloatingBubble>
+      </main>
+    </div>
   );
 }

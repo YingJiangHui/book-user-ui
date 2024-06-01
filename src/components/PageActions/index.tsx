@@ -14,20 +14,23 @@ export const PageActions: React.FC<React.PropsWithChildren<PageActionsProps>> =
   memo((props) => {
     const { shadowed = true, actions, description, position } = props;
     return (
-      <div
-        className={classNames("page-actions")}
-        style={{
-          position: position,
-          ...(shadowed ? {} : { boxShadow: "none" }),
-        }}
-      >
-        <div className={classNames("page-actions__description")}>
-          {description}
+      <>
+        <div className={"page-actions__placeholder"}></div>
+        <div
+          className={classNames("page-actions")}
+          style={{
+            position: position,
+            ...(shadowed ? {} : { boxShadow: "none" }),
+          }}
+        >
+          <div className={classNames("page-actions__description")}>
+            {description}
+          </div>
+          <div className={classNames("page-actions__action-buttons")}>
+            {actions}
+          </div>
         </div>
-        <div className={classNames("page-actions__action-buttons")}>
-          {actions}
-        </div>
-      </div>
+      </>
     );
   });
 
