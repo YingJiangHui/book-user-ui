@@ -10,7 +10,7 @@ export const FallbackBookImage: React.FC<
   React.PropsWithChildren<FallbackBookImageProps>
 > = memo((props) => {
 
-  const { width = 50 } = props;
+  const { width = 80 } = props;
   return (
     <div
       style={{

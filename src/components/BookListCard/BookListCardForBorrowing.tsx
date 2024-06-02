@@ -9,7 +9,7 @@ import { Constants } from "@/constants";
 type props = {
   data: API.Borrowing.Instance;
 };
-export type BookListCardBorrowingProps = props;
+export type BookListCardBorrowingProps = props & React.HTMLAttributes<HTMLDivElement>;
 export const BookListCardBorrowing: React.FC<
   React.PropsWithChildren<BookListCardBorrowingProps>
 > = memo((props) => {
@@ -41,7 +41,7 @@ export const BookListCardBorrowing: React.FC<
           src={files?.[0]?.url || "none"}
           fallback={<FallbackBookImage />}
           alt={title + "封面"}
-          width={50}
+          width={80}
         />
       </div>
       <div className="book-list-card__content">

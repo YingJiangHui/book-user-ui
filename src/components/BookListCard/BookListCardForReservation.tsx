@@ -9,7 +9,8 @@ import { Constants } from "@/constants";
 type props = {
   data: API.Reservation.Instance;
 };
-export type BookListCardReservationProps = props;
+export type BookListCardReservationProps = props &
+  React.HTMLAttributes<HTMLDivElement>;
 export const BookListCardReservation: React.FC<
   React.PropsWithChildren<BookListCardReservationProps>
 > = memo((props) => {
@@ -41,7 +42,7 @@ export const BookListCardReservation: React.FC<
           src={files?.[0]?.url || "none"}
           fallback={<FallbackBookImage />}
           alt={title + "封面"}
-          width={50}
+          width={80}
         />
       </div>
       <div className="book-list-card__content">

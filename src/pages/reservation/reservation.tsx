@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useRequest } from "@@/exports";
+import { useNavigate, useRequest } from "@@/exports";
 import { getReservations } from "@/service/reservation";
 import { BookListCardWithCheckbox } from "@/components/BookListCardWithCheckbox/BookListCardWithCheckbox";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
@@ -24,6 +24,8 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
     };
     const userLocationInRange = useUserLocationInRange();
     const [form] = Form.useForm();
+    const navigate = useNavigate();
+
     return (
       <Form
         form={form}
@@ -49,7 +51,12 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                 value={item.id}
                 key={item.id}
               >
-                <BookListCardReservation data={item} />
+                <BookListCardReservation
+                  data={item}
+                  onClick={() => {
+                    navigate(`/books/${item.book.id}`);
+                  }}
+                />
               </BookListCardWithCheckbox>
             ))}
           </Checkbox.Group>

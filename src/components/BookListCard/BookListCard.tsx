@@ -20,7 +20,7 @@ export const BookListCard: React.FC<
           src={files?.[0]?.url || "none"}
           fallback={<FallbackBookImage />}
           alt={title + "封面"}
-          width={50}
+          width={80}
         />
       </div>
       <div className="book-list-card__content">
