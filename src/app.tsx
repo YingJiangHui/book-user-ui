@@ -17,10 +17,10 @@ const defaultInitialState: System.InitialState = { name: '图书管理系统' };
 
 export async function getInitialState(): Promise<System.InitialState> {
   const token = storage.get('token');
-  if (!token) {
-    toLogin();
-    return defaultInitialState;
-  }
+  // if (!token) {
+  //   toLogin();
+  //   return defaultInitialState;
+  // }
   const res = await getUserInfo().catch(() => {
     // toLogin();
     return null;

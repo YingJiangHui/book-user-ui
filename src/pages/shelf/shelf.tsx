@@ -38,7 +38,7 @@ export const ShelfPage: React.FC<React.PropsWithChildren<ShelfPageProps>> =
       bookShelfReq.refresh();
     };
     return (
-      <Space direction={"vertical"}>
+      <Space direction={"vertical"} style={{ width: "100%" }}>
         {bookShelfReq.data?.map((library) => {
           return (
             <LibraryShelfForm
