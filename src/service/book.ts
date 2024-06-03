@@ -33,3 +33,15 @@ export const reserveBook = async (params: {
     }
   );
 };
+
+export const searchBook = async (
+  params: API.Common.ParamsWithPagination<{ keyword: number }>
+) => {
+  return request<API.Common.ResultWithPagination<API.Book.Instance>>(
+    `/api/books/search`,
+    {
+      method: "GET",
+      params,
+    }
+  );
+};

@@ -30,6 +30,7 @@ export default defineConfig({
   routes: [
     { path: "/", redirect: "/home" },
     { path: "/docs", component: "docs" },
+    { path: "/search", component: "search/search", name: "搜索图书" },
     { path: "/borrowing", component: "borrowing/borrowing", name: "借阅中" },
     {
       path: "/reservation",

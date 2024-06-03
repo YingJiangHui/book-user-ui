@@ -41,7 +41,7 @@ export const CategoryPage: React.FC<
         <SideBar
           activeKey={searchParams.get("activeKey")}
           onChange={(key) => {
-            setSearchParams({ activeKey: key });
+            setSearchParams({ activeKey: key }, { replace: true });
           }}
         >
           {categoriesReq.data

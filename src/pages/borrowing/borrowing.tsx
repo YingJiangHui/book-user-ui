@@ -66,9 +66,12 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
       <Form
         form={form}
         onValuesChange={(changedValues, allValues) => {
-          setSearchParams({
-            borrowingIds: allValues.borrowingIds,
-          });
+          setSearchParams(
+            {
+              borrowingIds: allValues.borrowingIds,
+            },
+            { replace: true }
+          );
         }}
         initialValues={{
           borrowingIds: searchParams.getAll("borrowingIds")?.map(Number),
@@ -160,13 +163,16 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
                     form.setFieldsValue({
                       borrowingIds: allBorrowingIds,
                     });
-                    setSearchParams({ borrowingIds: allBorrowingIds as any });
+                    setSearchParams(
+                      { borrowingIds: allBorrowingIds as any },
+                      { replace: true }
+                    );
                     update();
                   } else {
                     form.setFieldsValue({
                       borrowingIds: [],
                     });
-                    setSearchParams({ borrowingIds: [] });
+                    setSearchParams({ borrowingIds: [] }, { replace: true });
                   }
                 }}
               />
