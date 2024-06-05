@@ -1,15 +1,18 @@
 import {
   history,
+  Link,
   matchRoutes,
   Outlet,
   useAppData,
   useLocation,
+  useModel,
   useNavigate,
+  useRequest,
   useRouteData,
 } from "@@/exports";
 import styles from "@/layouts/index.less";
 import { NavBar, TabBar } from "antd-mobile";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   ContentOutline,
   LocationFill,
@@ -18,6 +21,8 @@ import {
 } from "antd-mobile-icons";
 import shujia_primary from "@/assets/shujia-primary.svg";
 import shujia from "@/assets/shujia.svg";
+import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
+import { getLibraries } from "@/service/library";
 const tabs = [
   {
     key: "home",
@@ -53,6 +58,10 @@ export default function Layout() {
   const { clientRoutes } = appData;
   const l = useLocation();
   const matches = matchRoutes(clientRoutes, l.pathname);
+  const { library, locationService, librariesReq } = useModel(
+    "currentLibraryModel"
+  );
+
   return (
     <div className={styles.layout}>
       <NavBar
@@ -61,7 +70,16 @@ export default function Layout() {
           borderBottom: "1px solid rgba(0,0,0,0.1)",
         }}
         backArrow={false}
-        right={<LocationFill color={"red"} />}
+        right={
+          <Link style={{ color: "#333" }} to={"/libraries-map"}>
+            {locationService.location && librariesReq.data
+              ? library
+                ? library?.name
+                : "未在图书馆范围"
+              : ""}{" "}
+            <LocationFill color={"red"} />
+          </Link>
+        }
       >
         {(matches?.[matches?.length - 1]?.route as any)?.name}
       </NavBar>

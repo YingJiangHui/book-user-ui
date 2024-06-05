@@ -10,6 +10,21 @@ export default defineConfig({
     dataField: "data",
   },
   layout: false,
+  headScripts: [
+    {
+      content: `
+    window._AMapSecurityConfig = {
+          securityJsCode:'1a7f253a897308b74dc0f3d859b7f78f',
+    }`,
+      charset: "utf-8",
+    },
+  ],
+  scripts: [
+    "https://webapi.amap.com/maps?v=2.0&key=afbb14d219ab8177546eae44a24daa91",
+  ],
+  externals: {
+    AMap: "window.AMap",
+  },
   extraPostCSSPlugins: [
     px2vw({
       unitToConvert: "px", // 要转化的单位
@@ -30,6 +45,11 @@ export default defineConfig({
   routes: [
     { path: "/", redirect: "/home" },
     { path: "/docs", component: "docs" },
+    {
+      path: "/libraries-map",
+      component: "librariesMap/librariesMap",
+      name: "图书馆定位",
+    },
     { path: "/search", component: "search/search", name: "搜索图书" },
     { path: "/borrowing", component: "borrowing/borrowing", name: "借阅中" },
     {

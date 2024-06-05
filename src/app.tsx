@@ -25,6 +25,9 @@ export async function getInitialState(): Promise<System.InitialState> {
     // toLogin();
     return null;
   });
+
+
+
   return { ...defaultInitialState, user: res?.data, token };
 }
 
