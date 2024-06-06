@@ -2,7 +2,11 @@ import React, { memo, useMemo } from "react";
 import { SearchInput } from "@/components/SearchInput/SearchInput";
 import classNames from "classnames";
 import styles from "./search.less";
-import { getSearchHistory } from "@/service/search";
+import {
+  getSearchHistory,
+  getSearchHistoryAll,
+  getSearchHistoryHot,
+} from "@/service/search";
 import { Form, InfiniteScroll } from "antd-mobile";
 import { searchBook } from "@/service/book";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
@@ -16,6 +20,8 @@ export type SearchProps = props;
 export const Search: React.FC<React.PropsWithChildren<SearchProps>> = memo(
   (props) => {
     const searchHistoryReq = useRequest(getSearchHistory);
+    const searchHistoryHotReq = useRequest(getSearchHistoryHot);
+    // const searchHistoryReq = useRequest(getSearchHistoryAll);
     const [form] = Form.useForm();
     const searchBookReq = useInfiniteScroll(
       (currentData) => {
@@ -39,8 +45,6 @@ export const Search: React.FC<React.PropsWithChildren<SearchProps>> = memo(
       () => searchBookReq.data?.list as API.Book.Instance[] | undefined,
       [searchBookReq.data?.list]
     );
-    console.log(searchHistoryReq);
-    console.log(searchBookReq.data);
     const navigate = useNavigate();
     return (
       <div className={classNames(styles.searchPage)}>
@@ -48,6 +52,11 @@ export const Search: React.FC<React.PropsWithChildren<SearchProps>> = memo(
           loading={searchBookReq.loading}
           form={form}
           placeholder={"搜索图书"}
+          onValuesChange={(changedValues, values) => {
+            if (!changedValues.keyword) {
+              searchBookReq.reload();
+            }
+          }}
           onFinish={(values) => {
             searchBookReq.reload();
           }}
@@ -80,24 +89,47 @@ export const Search: React.FC<React.PropsWithChildren<SearchProps>> = memo(
             </div>
           ) : (
             <div>
-              <div className={classNames(styles.searchHistory)}>
-                <div className={classNames(styles.searchHistoryTitle)}>
-                  历史搜索
+              {searchHistoryReq.data?.length ? (
+                <div className={classNames(styles.searchHistory)}>
+                  <div className={classNames(styles.searchHistoryTitle)}>
+                    历史搜索
+                  </div>
+                  <div className={classNames(styles.searchHistoryItem)}>
+                    {searchHistoryReq.data?.map((item) => (
+                      <span
+                        key={item.keyword}
+                        onClick={() => {
+                          form.setFieldValue("keyword", item.keyword);
+                          form.submit();
+                        }}
+                      >
+                        {item.keyword}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className={classNames(styles.searchHistoryItem)}>
-                  {searchHistoryReq.data?.map((item) => (
-                    <span
-                      key={item.keyword}
-                      onClick={() => {
-                        form.setFieldValue("keyword", item.keyword);
-                        form.submit();
-                      }}
-                    >
-                      {item.keyword}
-                    </span>
-                  ))}
+              ) : undefined}
+
+              {searchHistoryHotReq.data?.length ? (
+                <div className={classNames(styles.searchHistory)}>
+                  <div className={classNames(styles.searchHistoryTitle)}>
+                    热门搜索
+                  </div>
+                  <div className={classNames(styles.searchHistoryItem)}>
+                    {searchHistoryHotReq.data?.map((item) => (
+                      <span
+                        key={item.keyword}
+                        onClick={() => {
+                          form.setFieldValue("keyword", item.keyword);
+                          form.submit();
+                        }}
+                      >
+                        {item.keyword}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : undefined}
             </div>
           )}
         </div>

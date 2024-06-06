@@ -21,7 +21,7 @@ export default function CurrentLibrary() {
       ),
     [locationService.location, librariesReq.data]
   );
-
+  console.log("-222", locationService);
   return {
     librariesReq,
     library,

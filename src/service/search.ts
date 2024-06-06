@@ -19,3 +19,13 @@ export const getSearchHistoryAll = (params: {
       { params, skipErrorHandler: true }
   );
 };
+
+export const getSearchHistoryHot = (params: {
+  size: number
+  target: "BOOK";
+}) => {
+  return request<API.Common.Result<API.Search.Instance[]>>(
+      "/api/search-history/all",
+      { params, skipErrorHandler: true }
+  );
+};
