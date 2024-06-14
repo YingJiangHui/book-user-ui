@@ -53,7 +53,11 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       if (bookReq.loading) {
         return;
       }
-      console.log(userLocationInRange.error, "userLocationInRange.error");
+
+      if(bookReq.data?.available){
+
+      }
+
       if (userLocationInRange.error) {
         return (
           <PageActions description={"定位获取失败，请设置浏览器定位权限"} />
@@ -153,6 +157,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                         fallback={<FallbackBookImage width={80} />}
                         alt={"封面"}
                         width={80}
+                        height={80 * 1.46}
                         onClick={() => {
                           setVisibleIndex(index);
                         }}

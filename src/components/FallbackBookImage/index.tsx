@@ -9,7 +9,6 @@ export type FallbackBookImageProps = props;
 export const FallbackBookImage: React.FC<
   React.PropsWithChildren<FallbackBookImageProps>
 > = memo((props) => {
-
   const { width = 80 } = props;
   return (
     <div
@@ -22,7 +21,7 @@ export const FallbackBookImage: React.FC<
         justifyContent: "center",
       }}
     >
-      <Image src={image404} width={30} />
+      <Image src={image404} height={width * 1.46} width={30} />
     </div>
   );
 });

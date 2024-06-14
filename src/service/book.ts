@@ -1,6 +1,12 @@
 import { request } from "@umijs/max";
 
-export const getBooks = (params: { ids: (string | number)[] }) =>
+export const getBooks = (
+  params: API.Common.ParamsWithPagination<
+    Partial<
+      { ids: (string | number)[]; firstLibraryId: number } & API.Book.Instance
+    >
+  >
+) =>
   request<API.Common.ResultWithPagination<API.Book.Instance>>("/api/books", {
     params,
   });

@@ -20,8 +20,12 @@ namespace API {
       description: string;
 
       library: API.Library.Instance;
+
+      isRecommend: boolean;
+
+      isBanner: boolean;
     }
-    type CreateParams = Omit<Instance, 'files'> & { [key: string]: any };
+    type CreateParams = Omit<Instance, "files"> & { [key: string]: any };
     interface ListParams {}
   }
 }

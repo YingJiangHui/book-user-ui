@@ -40,9 +40,14 @@ const currentLocationMarker = new AMap.Marker({
 export type CustomAMapProps = props;
 export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
   memo((props) => {
-    const { locationService, librariesReq, library } = useModel(
-      "currentLibraryModel"
-    );
+    const {
+      selectedLibrary,
+      setSelectedLibrary,
+      locationService,
+      librariesReq,
+      library,
+    } = useModel("currentLibraryModel");
+
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const MapRef = useRef<AMap.Map>();
 
@@ -70,13 +75,12 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
           // center: [116.397428, 39.90923], // 中心点坐标
           zoom: 11, // 缩放级别
         });
-        setCurrent(
-          currentLocation?.coords.longitude,
-          currentLocation?.coords.latitude
-        );
       } else {
         console.error("AMap not loaded");
       }
+      return () => {
+        MapRef.current?.destroy();
+      };
     }, []);
     const findById = (id: number) =>
       librariesReq.data?.find((item) => item.id === id);
@@ -89,19 +93,41 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
         )
       );
 
-    const toPoint = (library: API.Library.Instance) => {
-      const center = new AMap.LngLat(library?.longitude, library?.latitude);
+    useEffect(() => {
+      if (!selectedLibrary) return;
+      const center = new AMap.LngLat(
+        selectedLibrary?.longitude,
+        selectedLibrary?.latitude
+      );
       markerInstance.setPosition(center);
       circleInstance.setCenter(center);
-      circleInstance.setRadius(library?.circumference);
-      setTimeout(() => {
-        MapRef.current?.add(markerInstance);
-        MapRef.current?.add(circleInstance);
-        // MapRef.current?.zoomIn();
-        MapRef.current?.setCenter(markerInstance.getPosition()!);
-        MapRef.current?.setZoom(10);
-      }, 500);
+      circleInstance.setRadius(selectedLibrary?.circumference);
+
+      // MapRef.current?.remove(markerInstance);
+      // MapRef.current?.remove(circleInstance);
+
+      MapRef.current?.add(markerInstance);
+      MapRef.current?.add(circleInstance);
+
+      MapRef.current?.setCenter(center);
+      MapRef.current?.setZoom(12);
+    }, [selectedLibrary]);
+
+    const toPoint = (library: API.Library.Instance) => {
+      setSelectedLibrary(library);
+      // const center = new AMap.LngLat(library?.longitude, library?.latitude);
+      // markerInstance.setPosition(center);
+      // circleInstance.setCenter(center);
+      // circleInstance.setRadius(library?.circumference);
+      // setTimeout(() => {
+      //   MapRef.current?.add(markerInstance);
+      //   MapRef.current?.add(circleInstance);
+      //   // MapRef.current?.zoomIn();
+      //   MapRef.current?.setCenter(markerInstance.getPosition()!);
+      //   MapRef.current?.setZoom(10);
+      // }, 500);
     };
+
     useEffect(() => {
       if (library) toPoint(library);
     }, [library]);
@@ -133,7 +159,7 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
                   actions={[
                     {
                       key: "payment",
-                      text: "点击列表中的图书馆，定位到图书馆位置",
+                      text: "点击列表中的图书馆，切换到对应图书馆",
                     },
                     {
                       key: "bus",
@@ -175,7 +201,13 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
             <br />
             <div style={{ maxHeight: 300, overflow: "auto" }}>
               <CheckList
-                defaultValue={library ? [library?.id as number] : []}
+                defaultValue={
+                  selectedLibrary
+                    ? [selectedLibrary.id]
+                    : library
+                    ? [library.id as number]
+                    : []
+                }
                 onChange={(e) => {
                   const library = findById(e[0] as any);
                   if (!library) {

@@ -1,32 +1,18 @@
 import React, { memo, useEffect, useState } from "react";
 import { SideBar } from "antd-mobile";
-import { useRequest, useSearchParams } from "@@/exports";
+import { useModel, useRequest, useSearchParams } from "@@/exports";
 import { getAllCategories, getCategories } from "@/service/categroy";
 import styles from "./index.less";
 import classNames from "classnames";
 import { BooksList } from "@/pages/category/books/books";
 
-export const tabs = [
-  {
-    key: "key1",
-    title: "选项一",
-  },
-  {
-    key: "key2",
-    title: "选项二",
-  },
-  {
-    key: "key3",
-    title: "选项三",
-  },
-];
 type props = {};
 export type CategoryPageProps = props;
 export const CategoryPage: React.FC<
   React.PropsWithChildren<CategoryPageProps>
 > = memo((props) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoriesReq = useRequest(getAllCategories, {
+  const categoriesReq = useRequest(() => getAllCategories(), {
     onSuccess: (res) => {
       if (!searchParams.get("activeKey"))
         setSearchParams(
@@ -52,7 +38,10 @@ export const CategoryPage: React.FC<
         </SideBar>
       </div>
       <div className={classNames(styles.content)}>
-        <BooksList categoryId={Number(searchParams.get("activeKey"))} />
+        <BooksList
+          key={searchParams.get("activeKey")}
+          categoryId={Number(searchParams.get("activeKey"))}
+        />
       </div>
     </div>
   );

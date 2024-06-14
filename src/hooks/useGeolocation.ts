@@ -10,12 +10,12 @@ export const useGeolocation = (deps: React.DependencyList) => {
       setError(error);
       return;
     }
-    const watcher = geo.watchPosition((a) => {
+    const watcher = geo.getCurrentPosition((a) => {
       console.log(a, "a00");
       setLocation(a);
     }, setError);
     console.log("watcher", watcher);
-    return () => geo.clearWatch(watcher);
+    // return () => geo.clearWatch(watcher);
   }, deps);
   console.log(location, "location");
   return { location, error };

@@ -11,11 +11,15 @@ body {
   margin: 0;
   background: var(--g-bg-color);
   --adm-font-size-main: var(--adm-font-size-7);
-  .adm-form{
+  .adm-form {
     --border-bottom: none;
   }
   .adm-list-body {
     background-color: transparent;
+  }
+  .adm-nav-bar-left,
+  .adm-nav-bar-right {
+    flex: 30%;
   }
 }
 
@@ -27,4 +31,22 @@ a {
   .adm-toast-main {
     max-width: 95vw !important;
   }
+}
+
+.panel-subheader {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 12px;
+  .panel-subheader__title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .panel-subheader__extra {
+    font-size: 14px;
+    color: #86909c;
+  }
+}
+
+img.adm-image-img {
+  object-fit: contain !important;
 }

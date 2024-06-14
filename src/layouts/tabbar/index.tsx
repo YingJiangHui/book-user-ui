@@ -58,8 +58,23 @@ export default function Layout() {
   const { clientRoutes } = appData;
   const l = useLocation();
   const matches = matchRoutes(clientRoutes, l.pathname);
-  const { library, locationService, librariesReq } =
+  const { library, selectedLibrary, locationService, librariesReq } =
     useModel("currentLibraryModel") || {};
+
+  const displayLibrary = useMemo(() => {
+    if (selectedLibrary) {
+      return selectedLibrary.name;
+    }
+    if (locationService?.location && librariesReq?.data) {
+      if (library?.id) {
+        return library.name;
+      } else {
+        return "";
+      }
+    }
+
+    return "未在图书馆范围";
+  }, [selectedLibrary, library, locationService?.location, librariesReq?.data]);
 
   return (
     <div className={styles.layout}>
@@ -71,11 +86,7 @@ export default function Layout() {
         backArrow={false}
         right={
           <Link style={{ color: "#333" }} to={"/libraries-map"}>
-            {locationService?.location && librariesReq?.data
-              ? library
-                ? library?.name
-                : "未在图书馆范围"
-              : ""}{" "}
+            {displayLibrary}
             <LocationFill color={"red"} />
           </Link>
         }
