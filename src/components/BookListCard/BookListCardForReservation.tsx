@@ -66,7 +66,7 @@ export const BookListCardReservation: React.FC<
         <p>作者：{author}</p>
         <p>所属图书馆：{library?.name}</p>
         <p>
-          预定时间：
+          预订时间：
           {dayjs(data.borrowedAt).format("YYYY-MM-DD")} 至{" "}
           {dayjs(data.returnedAt).format("YYYY-MM-DD")}
         </p>
@@ -74,4 +74,4 @@ export const BookListCardReservation: React.FC<
     </div>
   );
 });
-BookListCardReservation.displayName = "图书卡片用于预定时";
+BookListCardReservation.displayName = "图书卡片用于预订时";

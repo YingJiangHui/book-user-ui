@@ -148,7 +148,7 @@ export const ReservationApplication: React.FC<
       {/*    ) {*/}
       {/*      return (*/}
       {/*        <PageActions*/}
-      {/*          // description={"定位不在图书馆范围只可进行预定操作"}*/}
+      {/*          // description={"定位不在图书馆范围只可进行预订操作"}*/}
       {/*          actions={[*/}
       {/*            <Button*/}
       {/*              type={"submit"}*/}

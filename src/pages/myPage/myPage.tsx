@@ -43,7 +43,7 @@ export const MyPage: React.FC<React.PropsWithChildren<MyPageProps>> = memo(
             <div className={styles.title}>借阅中</div>
           </div>
           <div className={styles.item} onClick={() => navigate("/reservation")}>
-            <div className={styles.title}>预定记录</div>
+            <div className={styles.title}>预订记录</div>
           </div>
           <div
             className={styles.item}

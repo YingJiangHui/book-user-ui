@@ -44,18 +44,18 @@ export const reserveConfirm: React.FC<
           expectedReturnAt: dayjs(expectedReturnAt).endOf("day").toISOString(),
           from: searchParams.get("from") || undefined,
         });
-        Toast.show({ icon: "success", content: "预定成功" });
+        Toast.show({ icon: "success", content: "预订成功" });
         navigate(-1);
       }}
       footer={
         <Button block type="submit" color="primary" size="large">
-          确认预定
+          确认预订
         </Button>
       }
     >
       <Form.Item
         name="reserveRange"
-        label="预定时间段"
+        label="预订时间段"
         // trigger="onConfirm"
         initialValue={[startTime, endTime]}
         onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {
@@ -113,6 +113,6 @@ export const reserveConfirm: React.FC<
     </Form>
   );
 });
-reserveConfirm.displayName = "确认预定";
+reserveConfirm.displayName = "确认预订";
 
 export default reserveConfirm;

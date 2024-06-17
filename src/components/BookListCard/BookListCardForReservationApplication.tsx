@@ -75,4 +75,4 @@ export const BookListCardForReservationApplication: React.FC<
     </div>
   );
 });
-BookListCardForReservationApplication.displayName = "图书卡片用于预定时";
+BookListCardForReservationApplication.displayName = "图书卡片用于预订时";

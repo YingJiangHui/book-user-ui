@@ -76,4 +76,4 @@ export const BookListCardBorrowing: React.FC<
     </div>
   );
 });
-BookListCardBorrowing.displayName = "图书卡片用于预定时";
+BookListCardBorrowing.displayName = "图书卡片用于预订时";
