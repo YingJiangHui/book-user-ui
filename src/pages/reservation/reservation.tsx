@@ -141,7 +141,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
             ) {
               return (
                 <PageActions
-                  // description={"定位不在图书馆范围只可进行预约操作"}
+                  // description={"定位不在图书馆范围只可进行预定操作"}
                   actions={[
                     <Button
                       type={"submit"}
@@ -166,6 +166,6 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
       </Form>
     );
   });
-Reservation.displayName = "预约记录";
+Reservation.displayName = "预定记录";
 
 export default Reservation;

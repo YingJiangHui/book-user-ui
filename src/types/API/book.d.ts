@@ -24,6 +24,9 @@ namespace API {
       isRecommend: boolean;
 
       isBanner: boolean;
+
+      borrowing: API.Borrowing.Instance;
+      reservation: API.Reservation.Instance;
     }
     type CreateParams = Omit<Instance, "files"> & { [key: string]: any };
     interface ListParams {}

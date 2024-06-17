@@ -4,6 +4,7 @@ import { Checkbox } from "antd-mobile";
 import { BookListCardWithCheckbox } from "@/components/BookListCardWithCheckbox/BookListCardWithCheckbox";
 import "./booksInLibraryGroupList.less";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
+import { useNavigate } from "@@/exports";
 
 type props = {
   data: API.BookShelf.Instance;
@@ -18,6 +19,7 @@ export const BooksInLibraryGroupList: React.FC<
   React.PropsWithChildren<BooksInLibraryGroupListProps>
 > = memo((props) => {
   const { onChange, value = [], data } = props;
+  const nav = useNavigate();
   return (
     <div className={classNames("books-in-library-group")}>
       <div className={classNames("books-in-library-group__header")}>
@@ -27,7 +29,7 @@ export const BooksInLibraryGroupList: React.FC<
               indeterminate={
                 value && value?.length > 0 && value.length < data.books.length
               }
-              checked={value?.length === data.books.length}
+              checked={value?.length && value?.length === data.books.length}
               onChange={(bool) => {
                 if (bool) {
                   onChange?.(
@@ -66,7 +68,10 @@ export const BooksInLibraryGroupList: React.FC<
             }}
             value={item.id}
           >
-            <BookListCard data={item} />
+            <BookListCard
+              data={item}
+              onClick={() => nav(`/books/${item.bookId}`)}
+            />
           </BookListCardWithCheckbox>
         );
       })}

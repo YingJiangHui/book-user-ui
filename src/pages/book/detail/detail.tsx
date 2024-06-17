@@ -16,6 +16,7 @@ import { Descriptions } from "@/components/Descriptions/description";
 import { PageActions } from "@/components/PageActions";
 import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import { addBookShelf } from "@/service/bookShelf";
+import { reservationBookApply } from "@/service/reservationApplication";
 type props = {};
 export type BookDetailProps = props;
 export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
@@ -54,8 +55,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
         return;
       }
 
-      if(bookReq.data?.available){
-
+      if (bookReq.data?.available) {
       }
 
       if (userLocationInRange.error) {
@@ -89,10 +89,43 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
           />
         );
       }
+      if (bookReq.data?.borrowing) {
+        return (
+          <PageActions
+            description={
+              "该图书已被借阅，可预约图书，取书时间会已邮件方式通知。"
+            }
+            actions={[
+              <Button
+                color={"primary"}
+                fill={"outline"}
+                style={{ borderRadius: "0px" }}
+                onClick={addBookToBookList}
+              >
+                加入书架
+              </Button>,
+              <Button
+                color={"primary"}
+                style={{ borderRadius: "0px" }}
+                onClick={async () => {
+                  await reservationBookApply({ bookId: params.id! });
+                  Toast.show({
+                    content:
+                      "已为您预约此书籍，取书时间会已邮件形式通知，请按时取书！",
+                    duration: 4000,
+                  });
+                }}
+              >
+                预约图书
+              </Button>,
+            ]}
+          />
+        );
+      }
       if (userLocationInRange.isInRange) {
         return (
           <PageActions
-            // description={"定位不在图书馆范围只可进行预约操作"}
+            // description={"定位不在图书馆范围只可进行预定操作"}
             actions={[
               <Button
                 color={"primary"}
@@ -115,7 +148,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       } else {
         return (
           <PageActions
-            description={"定位不在图书馆范围只可进行预约操作"}
+            description={"定位不在图书馆范围只可进行预定操作"}
             actions={[
               <Button
                 color={"primary"}
@@ -130,7 +163,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 style={{ borderRadius: "0px" }}
                 onClick={reserveBook}
               >
-                预约图书
+                预定图书
               </Button>,
             ]}
           />

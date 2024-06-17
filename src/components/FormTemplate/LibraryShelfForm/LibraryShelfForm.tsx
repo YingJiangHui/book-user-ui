@@ -93,7 +93,7 @@ export const LibraryShelfForm: React.FC<
               <PageActions
                 shadowed={false}
                 position={"relative"}
-                // description={"定位不在图书馆范围只可进行预约操作"}
+                // description={"定位不在图书馆范围只可进行预定操作"}
                 actions={[
                   <Button
                     disabled={!form.getFieldValue("shelf")?.length}
@@ -117,7 +117,7 @@ export const LibraryShelfForm: React.FC<
                     }}
                     fill={"outline"}
                   >
-                    预约图书
+                    预定图书
                   </Button>,
                   <Button
                     disabled={!form.getFieldValue("shelf")?.length}
@@ -138,7 +138,7 @@ export const LibraryShelfForm: React.FC<
               <PageActions
                 shadowed={false}
                 position={"relative"}
-                description={"定位不在图书馆范围只可进行预约操作"}
+                description={"定位不在图书馆范围只可进行预定操作"}
                 actions={[
                   <Button
                     disabled={!form.getFieldValue("shelf")?.length}
@@ -160,7 +160,7 @@ export const LibraryShelfForm: React.FC<
                       form.setFieldsValue({ actionType: "RESERVE" });
                     }}
                   >
-                    预约图书
+                    预定图书
                   </Button>,
                 ]}
               />

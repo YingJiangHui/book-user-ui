@@ -18,6 +18,7 @@ import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import { PageActions } from "@/components/PageActions";
 import { Calendar } from "@/components/CalendarSelect";
 import dayjs from "dayjs";
+import { useLoading } from "@/hooks/useLoading";
 const now = new Date();
 
 const pageActionsDescriptionStyle = {
@@ -62,6 +63,15 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
       () => borrowingsReq.data?.list.map((item) => item.id),
       [borrowingsReq.data?.list]
     );
+    const [onFinish, loading] = useLoading(async (values) => {
+      await returnBook({
+        borrowingIds: values.borrowingIds,
+      }).then(() => {
+        Toast.show("归还成功");
+        form.setFieldsValue({ borrowingIds: [] });
+        borrowingsReq.reload();
+      });
+    });
     return (
       <Form
         form={form}
@@ -76,15 +86,7 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
         initialValues={{
           borrowingIds: searchParams.getAll("borrowingIds")?.map(Number),
         }}
-        onFinish={(values) => {
-          returnBook({
-            borrowingIds: values.borrowingIds,
-          }).then(() => {
-            Toast.show("归还成功");
-            form.setFieldsValue({ borrowingIds: [] });
-            borrowingsReq.reload();
-          });
-        }}
+        onFinish={onFinish}
       >
         <Form.Item noStyle name={"borrowingIds"}>
           <Checkbox.Group>
@@ -156,6 +158,7 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
                   borrowingIds.length < borrowingsReq.data?.list.length
                 }
                 checked={
+                  borrowingIds?.length &&
                   borrowingIds?.length === borrowingsReq.data?.list.length
                 }
                 onChange={(bool) => {
@@ -351,6 +354,7 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
                       type={"submit"}
                       color={"primary"}
                       style={{ borderRadius: "0px" }}
+                      loading={loading}
                     >
                       归还图书
                     </Button>,

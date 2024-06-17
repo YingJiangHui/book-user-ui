@@ -55,6 +55,11 @@ export default defineConfig({
     {
       path: "/reservation",
       component: "reservation/reservation",
+      name: "预定记录",
+    },
+    {
+      path: "/reservation-application",
+      component: "reservationApplication/reservationApplication",
       name: "预约记录",
     },
     {
@@ -71,7 +76,7 @@ export default defineConfig({
     {
       path: "books/reserve-confirm",
       component: "reserveConfirm/reserveConfirm",
-      name: "预约确认",
+      name: "预定确认",
     },
     {
       path: "books/borrow-confirm",
