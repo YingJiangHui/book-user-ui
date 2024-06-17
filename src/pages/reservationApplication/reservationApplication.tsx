@@ -2,12 +2,13 @@ import React, { memo } from "react";
 import { useNavigate, useRequest } from "@@/exports";
 import { getReservations } from "@/service/reservation";
 import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
-import { Button, Checkbox, Form, Toast } from "antd-mobile";
+import { Button, Checkbox, Form, Space, Toast } from "antd-mobile";
 import { borrowBookFormReservations } from "@/service/borrowing";
 import { BookListCardWithCheckbox } from "@/components/BookListCardWithCheckbox/BookListCardWithCheckbox";
 import { BookListCardReservation } from "@/components/BookListCard/BookListCardForReservation";
 import { PageActions } from "@/components/PageActions";
 import {
+  cancelReservationApplication,
   fulfillReservationApplication,
   getReservationBookApplication,
 } from "@/service/reservationApplication";
@@ -48,20 +49,35 @@ export const ReservationApplication: React.FC<
               actions={
                 <>
                   {["NOTIFIED", "PENDING"].includes(item.status) ? (
-                    <Button
-                      disabled={item.status !== "NOTIFIED"}
-                      shape="rounded"
-                      color={"primary"}
-                      size={"small"}
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        await fulfillReservationApplication({ id: item.id });
-                        Toast.show("取书完成");
-                        reservationsReq.refresh();
-                      }}
-                    >
-                      完成取书
-                    </Button>
+                    <Space>
+                      <Button
+                        disabled={item.status !== "NOTIFIED"}
+                        shape="rounded"
+                        color={"primary"}
+                        size={"small"}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await fulfillReservationApplication({ id: item.id });
+                          Toast.show("取书完成");
+                          reservationsReq.refresh();
+                        }}
+                      >
+                        完成取书
+                      </Button>
+                      <Button
+                        shape="rounded"
+                        color={"danger"}
+                        size={"small"}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await cancelReservationApplication({ id: item.id });
+                          Toast.show("取消预约");
+                          reservationsReq.refresh();
+                        }}
+                      >
+                        取消预约
+                      </Button>
+                    </Space>
                   ) : undefined}
                 </>
               }

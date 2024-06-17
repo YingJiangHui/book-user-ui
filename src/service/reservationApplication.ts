@@ -9,7 +9,7 @@ export const reservationBookApply = (params: { bookId: number | string }) => {
 
 export const getReservationBookApplication = () => {
   return request<API.Common.Result<API.ReservationApplication.Instance[]>>(
-    "/api/reservation-application",
+    "/api/reservation-application/all",
     {
       method: "GET",
     }
@@ -22,5 +22,14 @@ export const fulfillReservationApplication = (params: {
   return request<API.Common.Result<API.ReservationApplication.Instance[]>>(
     `/api/reservation-application/${params.id}`,
     { method: "POST" }
+  );
+};
+
+export const cancelReservationApplication = (params: {
+  id: number | string;
+}) => {
+  return request(
+      `/api/reservation-application/${params.id}`,
+      { method: "DELETE" }
   );
 };
