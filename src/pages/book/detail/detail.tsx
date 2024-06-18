@@ -17,6 +17,7 @@ import { PageActions } from "@/components/PageActions";
 import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import { addBookShelf } from "@/service/bookShelf";
 import { reservationBookApply } from "@/service/reservationApplication";
+import { libraryAuthTextFeedback } from "@/utils/feedback";
 type props = {};
 export type BookDetailProps = props;
 export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
@@ -55,7 +56,8 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
         return;
       }
 
-      if (bookReq.data?.available) {
+      if (bookReq.data?.available === false) {
+        return <PageActions description={"图书已下架"}></PageActions>;
       }
 
       if (userLocationInRange.error) {
@@ -93,7 +95,10 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
         return (
           <PageActions
             description={
-              "该图书已被借阅，可预约图书，取书时间会已邮件方式通知。"
+              libraryAuthTextFeedback(
+                bookReq.data?.library,
+                "disableReserveApplication"
+              ) || "该图书已被借阅，可预约图书，取书时间会已邮件方式通知。"
             }
             actions={[
               <Button
@@ -105,6 +110,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 加入书架
               </Button>,
               <Button
+                disabled={bookReq.data?.library.disableReserveApplication}
                 color={"primary"}
                 style={{ borderRadius: "0px" }}
                 onClick={async () => {
@@ -125,7 +131,10 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       if (userLocationInRange.isInRange) {
         return (
           <PageActions
-            // description={"定位不在图书馆范围只可进行预订操作"}
+            description={
+              libraryAuthTextFeedback(bookReq.data?.library, "disableBorrow") ||
+              "定位不在图书馆范围只可进行预订操作"
+            }
             actions={[
               <Button
                 color={"primary"}
@@ -136,6 +145,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 加入书架
               </Button>,
               <Button
+                disabled={bookReq.data?.library.disableBorrow}
                 color={"primary"}
                 style={{ borderRadius: "0px" }}
                 onClick={borrowBook}
@@ -148,7 +158,12 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       } else {
         return (
           <PageActions
-            description={"定位不在图书馆范围只可进行预订操作"}
+            description={
+              libraryAuthTextFeedback(
+                bookReq.data?.library,
+                "disableReserve"
+              ) || "定位不在图书馆范围只可进行预订操作"
+            }
             actions={[
               <Button
                 color={"primary"}
@@ -159,6 +174,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 加入书架
               </Button>,
               <Button
+                disabled={bookReq.data?.library.disableReserveApplication}
                 color={"primary"}
                 style={{ borderRadius: "0px" }}
                 onClick={reserveBook}
@@ -169,7 +185,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
           />
         );
       }
-    }, [userLocationInRange, bookReq.loading]);
+    }, [userLocationInRange, bookReq.data, bookReq.loading]);
     return (
       <>
         <div className={styles.bookDetail}>

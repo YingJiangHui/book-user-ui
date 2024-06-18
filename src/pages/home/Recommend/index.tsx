@@ -12,7 +12,7 @@ export const RecommendBooks: React.FC<
   React.PropsWithChildren<RecommendBooksProps>
 > = memo((props) => {
   const { librarySearcher } = useModel("currentLibraryModel");
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const recommendBooksReq = useRequest(
     () =>
       getBooks({
@@ -40,6 +40,9 @@ export const RecommendBooks: React.FC<
       <div className={classNames(styles.container)}>
         <div className={classNames(styles.left)}>
           <BookListCard
+            onClick={() => {
+              navigate(`/books/${oneBook?.id}`);
+            }}
             showGaveFieldsOnly
             direction={"column"}
             data={{
@@ -53,6 +56,9 @@ export const RecommendBooks: React.FC<
           <div className={classNames(styles.top)}>
             {twoBook ? (
               <BookListCard
+                onClick={() => {
+                  navigate(`/books/${twoBook?.id}`);
+                }}
                 noneBorder
                 imageWidth={50}
                 showGaveFieldsOnly
@@ -67,6 +73,9 @@ export const RecommendBooks: React.FC<
           <div className={classNames(styles.bottom)}>
             {threeBook ? (
               <BookListCard
+                onClick={() => {
+                  navigate(`/books/${threeBook?.id}`);
+                }}
                 noneBorder
                 imageWidth={50}
                 showGaveFieldsOnly

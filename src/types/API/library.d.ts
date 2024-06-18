@@ -10,6 +10,16 @@ namespace API {
       longitude: number;
 
       circumference: number;
+
+      address: string;
+
+      closed: boolean;
+
+      disableBorrow: boolean;
+
+      disableReserve: boolean;
+
+      disableReserveApplication: boolean;
     };
   }
 }

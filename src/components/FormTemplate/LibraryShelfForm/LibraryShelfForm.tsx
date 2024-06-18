@@ -6,6 +6,7 @@ import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import { FormInstance } from "antd-mobile/es/components/form";
 import { removeBookShelf } from "@/service/bookShelf";
 import { useSearchParams } from "@@/exports";
+import { libraryAuthTextFeedback } from "@/utils/feedback";
 
 export type LibraryShelfFormValues = {
   shelf: number[];
@@ -31,6 +32,11 @@ export const LibraryShelfForm: React.FC<
     ["shelf_" + data.id]: [],
   });
 
+  const resetForm = (form: any) => {
+    setSearchParams({ clear: "true" });
+    form.setFieldsValue({ shelf: [] });
+  };
+
   return (
     <Form
       initialValues={{
@@ -53,7 +59,6 @@ export const LibraryShelfForm: React.FC<
             { replace: true }
           );
         }
-
       }}
       onFinish={async (value) => {
         await onFinish(value);
@@ -88,12 +93,16 @@ export const LibraryShelfForm: React.FC<
               />
             );
           }
+
           if (userLocationInRange.isInRange) {
             return (
               <PageActions
                 shadowed={false}
                 position={"relative"}
-                // description={"定位不在图书馆范围只可进行预订操作"}
+                description={libraryAuthTextFeedback(data, [
+                  "disableBorrow",
+                  "disableReserveApplication",
+                ])}
                 actions={[
                   <Button
                     disabled={!form.getFieldValue("shelf")?.length}
@@ -101,14 +110,17 @@ export const LibraryShelfForm: React.FC<
                     style={{ borderRadius: "0px" }}
                     onClick={async () => {
                       await onDelete?.(form.getFieldValue("shelf"));
-                      form.resetFields();
+                      resetForm(form);
                     }}
                     // fill={"outline"}
                   >
                     删除图书
                   </Button>,
                   <Button
-                    disabled={!form.getFieldValue("shelf")?.length}
+                    disabled={
+                      !form.getFieldValue("shelf")?.length ||
+                      data.disableReserve
+                    }
                     type={"submit"}
                     color={"primary"}
                     style={{ borderRadius: "0px" }}
@@ -120,7 +132,9 @@ export const LibraryShelfForm: React.FC<
                     预订图书
                   </Button>,
                   <Button
-                    disabled={!form.getFieldValue("shelf")?.length}
+                    disabled={
+                      !form.getFieldValue("shelf")?.length || data.disableBorrow
+                    }
                     type={"submit"}
                     color={"primary"}
                     style={{ borderRadius: "0px" }}
@@ -138,7 +152,12 @@ export const LibraryShelfForm: React.FC<
               <PageActions
                 shadowed={false}
                 position={"relative"}
-                description={"定位不在图书馆范围只可进行预订操作"}
+                description={
+                  libraryAuthTextFeedback(data, [
+                    "disableBorrow",
+                    "disableReserve",
+                  ]) || "定位不在图书馆范围只可进行预订操作"
+                }
                 actions={[
                   <Button
                     disabled={!form.getFieldValue("shelf")?.length}
@@ -146,13 +165,16 @@ export const LibraryShelfForm: React.FC<
                     style={{ borderRadius: "0px" }}
                     onClick={async () => {
                       await onDelete?.(form.getFieldValue("shelf"));
-                      form.resetFields();
+                      resetForm(form);
                     }}
                   >
                     删除图书
                   </Button>,
                   <Button
-                    disabled={!form.getFieldValue("shelf")?.length}
+                    disabled={
+                      !form.getFieldValue("shelf")?.length ||
+                      data.disableReserve
+                    }
                     type={"submit"}
                     color={"primary"}
                     style={{ borderRadius: "0px" }}

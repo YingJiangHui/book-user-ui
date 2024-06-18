@@ -1,20 +1,30 @@
 import React, { memo } from "react";
 import classNames from "classnames";
 
-import { Checkbox, CheckboxProps } from "antd-mobile";
+import { Checkbox, CheckboxProps, Popover } from "antd-mobile";
 import "./BookListCardWithCheckbox.less";
 
 type props = {
   value: any;
+  disabledMessage?: string;
 };
 export type BookListCardWithCheckboxProps = props & CheckboxProps;
 export const BookListCardWithCheckbox: React.FC<
   React.PropsWithChildren<BookListCardWithCheckboxProps>
 > = memo((props) => {
-  const { children, value, ...rest } = props;
+  const { children, disabledMessage, value, ...rest } = props;
   return (
     <div className={classNames("book-list-card__check-able")}>
-      <Checkbox {...rest} value={value} />
+      {rest.disabled ? (
+        <Popover
+          trigger="click"
+          content={rest.disabled ? disabledMessage : undefined}
+        >
+          <Checkbox {...rest} value={value} />
+        </Popover>
+      ) : (
+        <Checkbox {...rest} value={value} />
+      )}
       {children}
     </div>
   );

@@ -9,6 +9,8 @@ import {
   LibraryShelfFormValues,
 } from "@/components/FormTemplate/LibraryShelfForm/LibraryShelfForm";
 import { confirmToContinue } from "@/utils/feedback";
+import { None } from "@/components/None/None";
+import { PageLoading } from "@/components/PageLoading";
 
 type props = {};
 export type ShelfPageProps = props;
@@ -37,6 +39,15 @@ export const ShelfPage: React.FC<React.PropsWithChildren<ShelfPageProps>> =
       Toast.show("已从书架删除");
       bookShelfReq.refresh();
     };
+
+    if (bookShelfReq.loading) {
+      return <PageLoading />;
+    }
+
+    if (!bookShelfReq.data?.length) {
+      return <None />;
+    }
+
     return (
       <Space direction={"vertical"} style={{ width: "100%" }}>
         {bookShelfReq.data?.map((library) => {

@@ -1,10 +1,11 @@
 import React, { memo } from "react";
 import classNames from "classnames";
-import { Checkbox } from "antd-mobile";
+import { Checkbox, Popover } from "antd-mobile";
 import { BookListCardWithCheckbox } from "@/components/BookListCardWithCheckbox/BookListCardWithCheckbox";
 import "./booksInLibraryGroupList.less";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
 import { useNavigate } from "@@/exports";
+import {bookAuthFeedback} from "@/utils/feedback";
 
 type props = {
   data: API.BookShelf.Instance;
@@ -48,6 +49,8 @@ export const BooksInLibraryGroupList: React.FC<
       {data.books.map((item) => {
         return (
           <BookListCardWithCheckbox
+            disabled={!item.available || !!item.borrowing || !!item.reservation}
+            disabledMessage={bookAuthFeedback(item)}
             key={item.bookId}
             checked={value?.includes(item.bookId)}
             onChange={(bool) => {

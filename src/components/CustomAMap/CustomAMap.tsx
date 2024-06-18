@@ -190,6 +190,21 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
                         </>
                       ),
                     },
+                    {
+                      key: "scan",
+                      text: (
+                        <>
+                          <span
+                            style={{
+                              color: "var(--adm-color-weak)",
+                            }}
+                          >
+                            灰色字体
+                          </span>
+                          的图书馆为已关闭的图书馆
+                        </>
+                      ),
+                    },
                   ]}
                   trigger="click"
                 >
@@ -236,7 +251,15 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
                             }}
                           />
                         </a>
-                        <span>{item.name}</span>
+                        <span
+                          style={{
+                            color: item.closed
+                              ? "var(--adm-color-weak)"
+                              : undefined,
+                          }}
+                        >
+                          {item.name}
+                        </span>
                       </Space>
                     </CheckList.Item>
                   );
