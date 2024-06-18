@@ -42,7 +42,7 @@ export const libraryAuthTextFeedback = (
     disableReserveApplication: "预约",
   };
   if (typeof firstKeys === "string") {
-    return `该图书馆关闭了${map[firstKeys]}功能`;
+    return library[firstKeys] ? `该图书馆关闭了${map[firstKeys]}功能` : "";
   }
 
   const filteredKeys = firstKeys?.filter((key) => library[key]);
@@ -62,5 +62,5 @@ export const bookAuthFeedback = (book: API.Book.Instance) => {
     return "该图书已下架";
   }
 
-  return ""
+  return "";
 };

@@ -91,7 +91,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
           />
         );
       }
-      if (bookReq.data?.borrowing) {
+      if (bookReq.data?.borrowing || bookReq.data?.reservationApplications?.length) {
         return (
           <PageActions
             description={
@@ -132,8 +132,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
         return (
           <PageActions
             description={
-              libraryAuthTextFeedback(bookReq.data?.library, "disableBorrow") ||
-              "定位不在图书馆范围只可进行预订操作"
+              libraryAuthTextFeedback(bookReq.data?.library, "disableBorrow")
             }
             actions={[
               <Button
