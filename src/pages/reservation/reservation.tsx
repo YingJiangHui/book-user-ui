@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { useNavigate, useRequest } from "@@/exports";
-import { getReservations } from "@/service/reservation";
+import { cancelReservations, getReservations } from "@/service/reservation";
 import { BookListCardWithCheckbox } from "@/components/BookListCardWithCheckbox/BookListCardWithCheckbox";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
 import { BookListCardReservation } from "@/components/BookListCard/BookListCardForReservation";
@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import { confirmToContinue } from "@/utils/feedback";
 import { borrowBook } from "@/service/book";
 import { borrowBookFormReservations } from "@/service/borrowing";
+import { useLoading } from "@/hooks/useLoading";
 
 type props = {};
 export type ReservationProps = props;
@@ -25,12 +26,27 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
     const userLocationInRange = useUserLocationInRange();
     const [form] = Form.useForm();
     const navigate = useNavigate();
-
+    const [cancelReserve, cancelLoading] = useLoading(async () => {
+      await cancelReservations({ ids: form.getFieldValue("reservationIds") });
+      Toast.show("取消成功");
+      form.resetFields();
+      reservationsReq.refresh();
+    });
+    const [finishReserve, finishLoading] = useLoading(async (values) => {
+      await borrowBookFormReservations({
+        reservationIds: values.reservationIds,
+      }).then(() => {
+        Toast.show("借阅成功");
+        form.resetFields();
+        reservationsReq.refresh();
+      });
+    });
+    const actionLoading = finishLoading || cancelLoading;
     return (
       <Form
         form={form}
-        onFinish={(values) => {
-          borrowBookFormReservations({
+        onFinish={async (values) => {
+          await borrowBookFormReservations({
             reservationIds: values.reservationIds,
           }).then(() => {
             Toast.show("借阅成功");
@@ -73,6 +89,11 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
               }),
               {}
             );
+            const cancelUI = (
+              <Button disabled color={"danger"} style={{ borderRadius: "0px" }}>
+                取消预订
+              </Button>
+            );
             const defaultUI = (
               <Button
                 disabled
@@ -83,19 +104,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
               </Button>
             );
             if (Object.keys(libraryMap || {}).length === 0) {
-              return (
-                <PageActions
-                  actions={[
-                    <Button
-                      disabled
-                      color={"primary"}
-                      style={{ borderRadius: "0px" }}
-                    >
-                      完成取书
-                    </Button>,
-                  ]}
-                />
-              );
+              return <PageActions actions={[cancelUI, defaultUI]} />;
             }
             const library = Object.values(
               libraryMap || {}
@@ -104,7 +113,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
               return (
                 <PageActions
                   description={"只能选择同一图书馆的图书进行操作"}
-                  actions={[defaultUI]}
+                  actions={[cancelUI, defaultUI]}
                 />
               );
             }
@@ -112,7 +121,17 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
               return (
                 <PageActions
                   description={"定位获取失败，请设置浏览器定位权限"}
-                  actions={[defaultUI]}
+                  actions={[
+                    <Button
+                      color={"danger"}
+                      style={{ borderRadius: "0px" }}
+                      onClick={cancelReserve}
+                      loading={actionLoading}
+                    >
+                      取消预订
+                    </Button>,
+                    defaultUI,
+                  ]}
                 />
               );
             }
@@ -121,6 +140,13 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                 <PageActions
                   description={"定位中..."}
                   actions={[
+                    <Button
+                      color={"danger"}
+                      style={{ borderRadius: "0px" }}
+                      loading={true}
+                    >
+                      取消预订
+                    </Button>,
                     <Button
                       color={"primary"}
                       style={{ borderRadius: "0px" }}
@@ -144,9 +170,18 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                   // description={"定位不在图书馆范围只可进行预订操作"}
                   actions={[
                     <Button
+                      color={"danger"}
+                      style={{ borderRadius: "0px" }}
+                      onClick={cancelReserve}
+                      loading={actionLoading}
+                    >
+                      取消预订
+                    </Button>,
+                    <Button
                       type={"submit"}
                       color={"primary"}
                       style={{ borderRadius: "0px" }}
+                      loading={actionLoading}
                     >
                       完成取书
                     </Button>,
@@ -157,7 +192,17 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
               return (
                 <PageActions
                   description={"定位不在图书馆范围，无法借阅"}
-                  actions={[defaultUI]}
+                  actions={[
+                    <Button
+                      color={"danger"}
+                      style={{ borderRadius: "0px" }}
+                      onClick={cancelReserve}
+                      loading={actionLoading}
+                    >
+                      取消预订
+                    </Button>,
+                    defaultUI,
+                  ]}
                 />
               );
             }
