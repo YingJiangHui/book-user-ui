@@ -58,7 +58,9 @@ export const bookAuthFeedback = (book: API.Book.Instance) => {
   if (book.borrowing) {
     return "该图书已被借阅，进入详情预约图书";
   }
-  if (book.available) {
+  if (!book.available) {
     return "该图书已下架";
   }
+
+  return ""
 };

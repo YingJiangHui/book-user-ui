@@ -66,7 +66,10 @@ export const LibraryShelfForm: React.FC<
     >
       <Form.Item hidden noStyle name={"actionType"} />
       <Form.Item noStyle name={"shelf"}>
-        <BooksInLibraryGroupList data={data} />
+        <BooksInLibraryGroupList
+          onDelete={(id) => onDelete?.([id])}
+          data={data}
+        />
       </Form.Item>
       <Form.Item noStyle dependencies={["shelf"]}>
         {(form) => {

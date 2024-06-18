@@ -19,6 +19,7 @@ import { PageActions } from "@/components/PageActions";
 import { Calendar } from "@/components/CalendarSelect";
 import dayjs from "dayjs";
 import { useLoading } from "@/hooks/useLoading";
+import { None } from "@/components/None/None";
 const now = new Date();
 
 const pageActionsDescriptionStyle = {
@@ -72,6 +73,10 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
         borrowingsReq.reload();
       });
     });
+
+    if (!borrowingsReq.data?.list?.length) {
+      return <None />;
+    }
     return (
       <Form
         form={form}
@@ -88,6 +93,14 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
         }}
         onFinish={onFinish}
       >
+        <div className={"panel-subheader"}>
+          <div
+            className={"panel-subheader__title"}
+            style={{ fontWeight: "normal" }}
+          >
+            共{borrowingsReq.data.total}条记录
+          </div>
+        </div>
         <Form.Item noStyle name={"borrowingIds"}>
           <Checkbox.Group>
             {borrowingsReq.data?.list.map((item) => {

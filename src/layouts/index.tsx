@@ -1,6 +1,6 @@
 import { Outlet, history } from "@umijs/max";
 import styles from "./index.less";
-import { FloatingBubble, NavBar, TabBar } from "antd-mobile";
+import { FloatingBubble, NavBar, SafeArea, TabBar } from "antd-mobile";
 import shujia from "../assets/shujia.svg";
 import shujia_primary from "../assets/shujia-primary.svg";
 import {
@@ -65,16 +65,17 @@ export default function Layout() {
       </NavBar>
       <main>
         <Outlet />
+        <SafeArea position={"bottom"} />
         <FloatingBubble
-            onClick={() => {
-              navigate("/shelf");
-            }}
-            style={{
-              overflow: "visible",
-              "--initial-position-bottom": "18vh",
-              "--initial-position-right": "36px",
-              "--edge-distance": "24px",
-            }}
+          onClick={() => {
+            navigate("/shelf");
+          }}
+          style={{
+            overflow: "visible",
+            "--initial-position-bottom": "18vh",
+            "--initial-position-right": "36px",
+            "--edge-distance": "24px",
+          }}
         >
           <img src={shujia_white} height={28} />
         </FloatingBubble>

@@ -15,7 +15,7 @@ export const BookListCardWithCheckbox: React.FC<
   const { children, disabledMessage, value, ...rest } = props;
   return (
     <div className={classNames("book-list-card__check-able")}>
-      {rest.disabled ? (
+      {disabledMessage ? (
         <Popover
           trigger="click"
           content={rest.disabled ? disabledMessage : undefined}

@@ -3,7 +3,8 @@ import { useInfiniteScroll } from "ahooks";
 import { getBorrowings } from "@/service/borrowing";
 import { BookListCardBorrowing } from "@/components/BookListCard/BookListCardForBorrowing";
 import { useNavigate } from "@@/exports";
-import {InfiniteScroll} from "antd-mobile";
+import { InfiniteScroll } from "antd-mobile";
+import { None } from "@/components/None/None";
 
 type props = {};
 export type BorrowingHistoryProps = props;
@@ -25,8 +26,19 @@ export const BorrowingHistory: React.FC<
     }));
   });
   const navigate = useNavigate();
+  if (!borrowingsReq.data?.list?.length) {
+    return <None />;
+  }
   return (
     <>
+      <div className={"panel-subheader"}>
+        <div
+          className={"panel-subheader__title"}
+          style={{ fontWeight: "normal" }}
+        >
+          共{borrowingsReq.data.total}条记录
+        </div>
+      </div>
       {borrowingsReq.data?.list.map((item) => {
         return (
           <BookListCardBorrowing
@@ -39,13 +51,13 @@ export const BorrowingHistory: React.FC<
         );
       })}
       <InfiniteScroll
-          loadMore={async () => {
-            await borrowingsReq.loadMoreAsync();
-          }}
-          hasMore={
-              typeof borrowingsReq.data?.list?.length === "number" &&
-              borrowingsReq.data?.total > borrowingsReq.data?.list?.length
-          }
+        loadMore={async () => {
+          await borrowingsReq.loadMoreAsync();
+        }}
+        hasMore={
+          typeof borrowingsReq.data?.list?.length === "number" &&
+          borrowingsReq.data?.total > borrowingsReq.data?.list?.length
+        }
       />
     </>
   );

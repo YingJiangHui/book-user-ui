@@ -12,6 +12,7 @@ import { confirmToContinue } from "@/utils/feedback";
 import { borrowBook } from "@/service/book";
 import { borrowBookFormReservations } from "@/service/borrowing";
 import { useLoading } from "@/hooks/useLoading";
+import { None } from "@/components/None/None";
 
 type props = {};
 export type ReservationProps = props;
@@ -42,6 +43,10 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
       });
     });
     const actionLoading = finishLoading || cancelLoading;
+    if (!reservationsReq.data?.length) {
+      return <None />;
+    }
+
     return (
       <Form
         form={form}
@@ -55,6 +60,14 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
           });
         }}
       >
+        <div className={"panel-subheader"}>
+          <div
+            className={"panel-subheader__title"}
+            style={{ fontWeight: "normal" }}
+          >
+            共{reservationsReq.data.length}条记录
+          </div>
+        </div>
         <Form.Item noStyle name={"reservationIds"}>
           <Checkbox.Group
             onChange={(v) => {

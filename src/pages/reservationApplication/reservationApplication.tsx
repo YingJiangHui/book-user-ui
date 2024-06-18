@@ -13,6 +13,8 @@ import {
   getReservationBookApplication,
 } from "@/service/reservationApplication";
 import { BookListCardForReservationApplication } from "@/components/BookListCard/BookListCardForReservationApplication";
+import { None } from "@/components/None/None";
+import { RightOutline } from "antd-mobile-icons";
 
 type props = {};
 export type ReservationApplicationProps = props;
@@ -24,7 +26,9 @@ export const ReservationApplication: React.FC<
   const userLocationInRange = useUserLocationInRange();
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
+  if (!reservationsReq.data?.length) {
+    return <None />;
+  }
   return (
     <Form
       form={form}
@@ -38,6 +42,14 @@ export const ReservationApplication: React.FC<
       //   });
       // }}
     >
+      <div className={"panel-subheader"}>
+        <div
+          className={"panel-subheader__title"}
+          style={{ fontWeight: "normal" }}
+        >
+          共{reservationsReq.data?.length}条记录
+        </div>
+      </div>
       <Form.Item noStyle name={"reservationIds"}>
         <Checkbox.Group
           onChange={(v) => {
