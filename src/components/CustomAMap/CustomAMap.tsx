@@ -62,13 +62,6 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
     };
 
     useEffect(() => {
-      setCurrent(
-        currentLocation?.coords.longitude,
-        currentLocation?.coords.latitude
-      );
-    }, [currentLocation?.coords.latitude, currentLocation?.coords.longitude]);
-
-    useEffect(() => {
       const { AMap } = window;
       if (AMap && mapContainerRef.current) {
         MapRef.current = new AMap.Map(mapContainerRef.current, {
@@ -82,6 +75,12 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
         MapRef.current?.destroy();
       };
     }, []);
+    useEffect(() => {
+      setCurrent(
+        currentLocation?.coords.longitude,
+        currentLocation?.coords.latitude
+      );
+    }, [currentLocation?.coords.latitude, currentLocation?.coords.longitude]);
     const findById = (id: number) =>
       librariesReq.data?.find((item) => item.id === id);
     const getInRangeLibrary = () =>

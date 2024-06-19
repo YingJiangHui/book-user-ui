@@ -12,7 +12,7 @@ import { stringify } from "qs";
 import { toLogin } from "@/utils/helpers";
 import React from "react";
 
-const defaultInitialState: System.InitialState = { name: "图书管理系统" };
+const defaultInitialState: System.InitialState = { name: "自助图书借阅平台" };
 
 export async function getInitialState(): Promise<System.InitialState> {
   const token = storage.get("token");

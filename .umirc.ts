@@ -22,6 +22,9 @@ export default defineConfig({
   scripts: [
     "https://webapi.amap.com/maps?v=2.0&key=afbb14d219ab8177546eae44a24daa91",
   ],
+  links: [
+    { rel: 'icon', href: '/book.svg' },
+  ],
   externals: {
     AMap: "window.AMap",
   },
@@ -48,7 +51,7 @@ export default defineConfig({
     {
       path: "/libraries-map",
       component: "librariesMap/librariesMap",
-      name: "图书馆定位",
+      name: "图书馆位置",
     },
     { path: "/search", component: "search/search", name: "搜索图书" },
     { path: "/borrowing", component: "borrowing/borrowing", name: "借阅中" },
@@ -123,11 +126,12 @@ export default defineConfig({
         {
           path: "/register",
           component: "auth/register/index",
+          name: "注册",
           layout: false,
         },
         {
           path: "/forget-password",
-          name: "注册",
+          name: "忘记密码",
           component: "auth/forgetPassword/index",
           layout: false,
         },
@@ -136,6 +140,7 @@ export default defineConfig({
   ],
   npmClient: "pnpm",
   proxy: {
+
     "/api": {
       target: "http://localhost:8099",
       changeOrigin: true,

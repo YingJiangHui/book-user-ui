@@ -17,6 +17,7 @@ import {
   useRouteData,
 } from "@@/exports";
 import shujia_white from "@/assets/shujia-white.svg";
+import {usePageTitle} from "@/hooks/usePageTitle";
 const tabs = [
   {
     key: "home",
@@ -46,11 +47,9 @@ const tabs = [
   },
 ];
 export default function Layout() {
+
   const navigate = useNavigate();
-  const appData = useAppData();
-  const { clientRoutes } = appData;
-  const l = useLocation();
-  const matches = matchRoutes(clientRoutes, l.pathname);
+  const [title] = usePageTitle()
   return (
     <div className={styles.layout}>
       <NavBar
@@ -61,7 +60,7 @@ export default function Layout() {
         onBack={() => navigate(-1)}
       >
         {/*@ts-ignore*/}
-        {matches?.[matches?.length - 1]?.route?.name}
+        {title}
       </NavBar>
       <main>
         <Outlet />

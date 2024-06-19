@@ -33,3 +33,9 @@ export const resetPassword = (params: resetPasswordReq) =>
     data: params,
     method: "POST",
   });
+
+export const logoutUser = () => {
+    return request('/api/auth/logout', {
+        method: 'POST',
+    });
+};

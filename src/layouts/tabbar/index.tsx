@@ -23,6 +23,7 @@ import shujia_primary from "@/assets/shujia-primary.svg";
 import shujia from "@/assets/shujia.svg";
 import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import { getLibraries } from "@/service/library";
+import {usePageTitle} from "@/hooks/usePageTitle";
 const tabs = [
   {
     key: "home",
@@ -52,12 +53,9 @@ const tabs = [
   },
 ];
 export default function Layout() {
-  const appData = useAppData();
-  const navigate = useNavigate();
+  const [title] = usePageTitle();
 
-  const { clientRoutes } = appData;
-  const l = useLocation();
-  const matches = matchRoutes(clientRoutes, l.pathname);
+
   const { library, selectedLibrary, locationService, librariesReq } =
     useModel("currentLibraryModel") || {};
 
@@ -91,7 +89,7 @@ export default function Layout() {
           </Link>
         }
       >
-        {(matches?.[matches?.length - 1]?.route as any)?.name}
+        {title}
       </NavBar>
       <main className={styles.main}>
         <Outlet />
