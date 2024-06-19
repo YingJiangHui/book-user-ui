@@ -5,7 +5,7 @@ import { BookListCardWithCheckbox } from "@/components/BookListCardWithCheckbox/
 import { BookListCard } from "@/components/BookListCard/BookListCard";
 import { BookListCardReservation } from "@/components/BookListCard/BookListCardForReservation";
 import { PageActions } from "@/components/PageActions";
-import { Button, Checkbox, Form, Toast } from "antd-mobile";
+import { Button, Checkbox, Form, SwipeAction, Toast } from "antd-mobile";
 import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import dayjs from "dayjs";
 import { confirmToContinue } from "@/utils/feedback";
@@ -27,12 +27,14 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
     const userLocationInRange = useUserLocationInRange();
     const [form] = Form.useForm();
     const navigate = useNavigate();
-    const [cancelReserve, cancelLoading] = useLoading(async () => {
-      await cancelReservations({ ids: form.getFieldValue("reservationIds") });
-      Toast.show("取消成功");
-      form.resetFields();
-      reservationsReq.refresh();
-    });
+    const [cancelReserve, cancelLoading] = useLoading(
+      async (reservationIds: number[]) => {
+        await cancelReservations({ ids: reservationIds });
+        Toast.show("取消成功");
+        form.resetFields();
+        reservationsReq.refresh();
+      }
+    );
     const [finishReserve, finishLoading] = useLoading(async (values) => {
       await borrowBookFormReservations({
         reservationIds: values.reservationIds,
@@ -75,18 +77,32 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
             }}
           >
             {reservationsReq.data?.map((item) => (
-              <BookListCardWithCheckbox
-                disabled={item.status !== "BORROWABLE"}
-                value={item.id}
-                key={item.id}
+              <SwipeAction
+                rightActions={[
+                  {
+                    key: "delete",
+                    text: "取消",
+                    color: item.status === "CANCELLED" ? "weak" : "danger",
+                    onClick:
+                      item.status === "CANCELLED"
+                        ? () => {}
+                        : cancelReserve?.bind(null, [item.id]),
+                  },
+                ]}
               >
-                <BookListCardReservation
-                  data={item}
-                  onClick={() => {
-                    navigate(`/books/${item.book.id}`);
-                  }}
-                />
-              </BookListCardWithCheckbox>
+                <BookListCardWithCheckbox
+                  disabled={item.status !== "BORROWABLE"}
+                  value={item.id}
+                  key={item.id}
+                >
+                  <BookListCardReservation
+                    data={item}
+                    onClick={() => {
+                      navigate(`/books/${item.book.id}`);
+                    }}
+                  />
+                </BookListCardWithCheckbox>
+              </SwipeAction>
             ))}
           </Checkbox.Group>
         </Form.Item>
@@ -138,7 +154,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                     <Button
                       color={"danger"}
                       style={{ borderRadius: "0px" }}
-                      onClick={cancelReserve}
+                      onClick={cancelReserve.bind(null, reservationIds)}
                       loading={actionLoading}
                     >
                       取消预订
@@ -185,7 +201,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                     <Button
                       color={"danger"}
                       style={{ borderRadius: "0px" }}
-                      onClick={cancelReserve}
+                      onClick={cancelReserve.bind(null, reservationIds)}
                       loading={actionLoading}
                     >
                       取消预订
@@ -209,7 +225,7 @@ export const Reservation: React.FC<React.PropsWithChildren<ReservationProps>> =
                     <Button
                       color={"danger"}
                       style={{ borderRadius: "0px" }}
-                      onClick={cancelReserve}
+                      onClick={cancelReserve.bind(null, reservationIds)}
                       loading={actionLoading}
                     >
                       取消预订

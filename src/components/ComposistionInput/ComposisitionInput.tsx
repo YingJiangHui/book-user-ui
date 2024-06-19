@@ -1,21 +1,26 @@
 import React, {
   ChangeEventHandler,
+  forwardRef,
   memo,
   useCallback,
+  useEffect,
+  useImperativeHandle,
   useRef,
   useState,
 } from "react";
-import { Input, InputProps } from "antd-mobile";
+import {Input, InputProps, InputRef} from "antd-mobile";
 
 type props = {};
 export type CompositionInputProps = props & InputProps;
-export const CompositionInput: React.FC<
+export const CompositionInput = forwardRef<
+  { focus: () => void },
   React.PropsWithChildren<CompositionInputProps>
-> = memo((props) => {
+>((props, ref) => {
   const { onChange, defaultValue, value: outerValue, ...rest } = props;
   const lockRef = useRef(false);
   const [value, setValue] = useState(defaultValue);
-
+  const inputRef = useRef<InputRef>(null);
+  useImperativeHandle(ref, () => ({ focus: () => inputRef.current?.focus() }));
   const _onChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       console.log("e", e, e.type, lockRef.current);
@@ -34,8 +39,10 @@ export const CompositionInput: React.FC<
     },
     [onChange]
   );
+
   return (
     <Input
+      ref={inputRef}
       autoComplete={"off"}
       {...rest}
       onCompositionStart={_onChange as any}

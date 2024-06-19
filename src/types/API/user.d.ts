@@ -6,6 +6,7 @@ namespace API {
       email: string;
       roles: Role[];
       createdAt: string;
+      defaultTimes: number
     };
     type Instance = {
       id: number;

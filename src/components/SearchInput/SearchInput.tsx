@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { forwardRef, memo } from "react";
 import classNames from "classnames";
 import { Form, FormProps, Input, InputProps, SpinLoading } from "antd-mobile";
 import "./searchInput.less";
@@ -14,104 +14,106 @@ type props = {
   InputProps &
   FormProps;
 export type SearchInputProps = props;
-export const SearchInput: React.FC<React.PropsWithChildren<SearchInputProps>> =
-  memo((props) => {
-    const {
-      placeholder,
-      loading,
-      onlyDisplay,
-      onFinish,
-      form,
-      onValuesChange,
-      ...rest
-    } = props;
+export const SearchInput = forwardRef<
+  { focus: () => void },
+  React.PropsWithChildren<SearchInputProps>
+>((props, ref) => {
+  const {
+    placeholder,
+    loading,
+    onlyDisplay,
+    onFinish,
+    form,
+    onValuesChange,
+    ...rest
+  } = props;
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    const searchHistoryReq = useRequest(getSearchHistoryAll, {
-      manual: true,
-      debounceInterval: 500,
-    });
-    if (onlyDisplay) {
-      return (
-        <div className={classNames("search-input")} {...rest}>
-          <div className={classNames("search-input-content")}>
-            {loading ? (
-              <SpinLoading style={{ "--size": "22px" }} />
-            ) : (
-              <SearchOutline color={"#d6d6d6"} fontSize={24} />
-            )}
-
-            <Form.Item name={"keyword"} noStyle>
-              {/*<Input placeholder={placeholder} />*/}
-              <CompositionInput placeholder={placeholder} />
-            </Form.Item>
-            <button type={"submit"}>搜 索</button>
-          </div>
-        </div>
-      );
-    }
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchHistoryReq = useRequest(getSearchHistoryAll, {
+    manual: true,
+    debounceInterval: 500,
+  });
+  if (onlyDisplay) {
     return (
       <div className={classNames("search-input")} {...rest}>
-        <Form
-          form={form}
-          initialValues={{ keyword: searchParams.get("keyword") }}
-          onValuesChange={(changedValues, values) => {
-            searchHistoryReq.run({ target: "BOOK", keyword: values.keyword });
-            onValuesChange?.(changedValues, values);
-          }}
-          onFinish={(values) => {
-            setSearchParams({ keyword: values.keyword }, { replace: true });
-            onFinish?.(values);
-          }}
-        >
-          <Form.Item dependencies={["keyword"]} noStyle>
-            {(form) => {
-              return (
-                <>
-                  <div
-                    className={classNames(
-                      "search-input-content",
-                      searchHistoryReq.data?.length &&
-                        form.getFieldValue("keyword") &&
-                        "search-input-content-active"
-                    )}
-                  >
-                    {loading ? (
-                      <SpinLoading style={{ "--size": "22px" }} />
-                    ) : (
-                      <SearchOutline color={"#d6d6d6"} fontSize={24} />
-                    )}
+        <div className={classNames("search-input-content")}>
+          {loading ? (
+            <SpinLoading style={{ "--size": "22px" }} />
+          ) : (
+            <SearchOutline color={"#d6d6d6"} fontSize={24} />
+          )}
 
-                    <Form.Item name={"keyword"} noStyle>
-                      {/*<Input placeholder={placeholder} />*/}
-                      <CompositionInput placeholder={placeholder} />
-                    </Form.Item>
-                    <button type={"submit"}>搜 索</button>
-                    {searchHistoryReq.data?.length &&
-                    form.getFieldValue("keyword") ? (
-                      <div className={classNames("auto-complete")}>
-                        {searchHistoryReq.data?.map((item) => (
-                          <div
-                            tabIndex={0}
-                            className={classNames("auto-complete-item")}
-                            onClick={() => {
-                              form.setFieldsValue({ keyword: item.keyword });
-                              form.submit();
-                              searchHistoryReq.mutate(undefined);
-                            }}
-                          >
-                            {item.keyword}
-                          </div>
-                        ))}
-                      </div>
-                    ) : undefined}
-                  </div>
-                </>
-              );
-            }}
+          <Form.Item name={"keyword"} noStyle>
+            {/*<Input placeholder={placeholder} />*/}
+            <CompositionInput placeholder={placeholder} />
           </Form.Item>
-        </Form>
+          <button type={"submit"}>搜 索</button>
+        </div>
       </div>
     );
-  });
+  }
+  return (
+    <div className={classNames("search-input")} {...rest}>
+      <Form
+        form={form}
+        initialValues={{ keyword: searchParams.get("keyword") }}
+        onValuesChange={(changedValues, values) => {
+          searchHistoryReq.run({ target: "BOOK", keyword: values.keyword });
+          onValuesChange?.(changedValues, values);
+        }}
+        onFinish={(values) => {
+          setSearchParams({ keyword: values.keyword }, { replace: true });
+          onFinish?.(values);
+        }}
+      >
+        <Form.Item dependencies={["keyword"]} noStyle>
+          {(form) => {
+            return (
+              <>
+                <div
+                  className={classNames(
+                    "search-input-content",
+                    searchHistoryReq.data?.length &&
+                      form.getFieldValue("keyword") &&
+                      "search-input-content-active"
+                  )}
+                >
+                  {loading ? (
+                    <SpinLoading style={{ "--size": "22px" }} />
+                  ) : (
+                    <SearchOutline color={"#d6d6d6"} fontSize={24} />
+                  )}
+
+                  <Form.Item name={"keyword"} noStyle>
+                    {/*<Input placeholder={placeholder} />*/}
+                    <CompositionInput ref={ref} placeholder={placeholder} />
+                  </Form.Item>
+                  <button type={"submit"}>搜 索</button>
+                  {searchHistoryReq.data?.length &&
+                  form.getFieldValue("keyword") ? (
+                    <div className={classNames("auto-complete")}>
+                      {searchHistoryReq.data?.map((item) => (
+                        <div
+                          tabIndex={0}
+                          className={classNames("auto-complete-item")}
+                          onClick={() => {
+                            form.setFieldsValue({ keyword: item.keyword });
+                            form.submit();
+                            searchHistoryReq.mutate(undefined);
+                          }}
+                        >
+                          {item.keyword}
+                        </div>
+                      ))}
+                    </div>
+                  ) : undefined}
+                </div>
+              </>
+            );
+          }}
+        </Form.Item>
+      </Form>
+    </div>
+  );
+});
 SearchInput.displayName = "搜索输入框";

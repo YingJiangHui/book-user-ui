@@ -173,7 +173,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 加入书架
               </Button>,
               <Button
-                disabled={bookReq.data?.library.disableReserveApplication}
+                disabled={bookReq.data?.library.disableReserve}
                 color={"primary"}
                 style={{ borderRadius: "0px" }}
                 onClick={reserveBook}

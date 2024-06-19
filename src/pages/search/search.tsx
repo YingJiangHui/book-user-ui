@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useEffect, useMemo, useRef } from "react";
 import { SearchInput } from "@/components/SearchInput/SearchInput";
 import classNames from "classnames";
 import styles from "./search.less";
@@ -19,6 +19,10 @@ type props = {};
 export type SearchProps = props;
 export const Search: React.FC<React.PropsWithChildren<SearchProps>> = memo(
   (props) => {
+    const ref = useRef<{ focus: () => void }>(null);
+    useEffect(() => {
+      ref.current?.focus();
+    }, []);
     const searchHistoryReq = useRequest(getSearchHistory);
     const searchHistoryHotReq = useRequest(getSearchHistoryHot);
     // const searchHistoryReq = useRequest(getSearchHistoryAll);
@@ -49,6 +53,7 @@ export const Search: React.FC<React.PropsWithChildren<SearchProps>> = memo(
     return (
       <div className={classNames(styles.searchPage)}>
         <SearchInput
+          ref={ref}
           loading={searchBookReq.loading}
           form={form}
           placeholder={"搜索图书"}

@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styles from "./myPage.less";
 import { Image, Space, Tag } from "antd-mobile";
 import avator from "@/assets/avator.svg";
-import { useModel, useNavigate } from "@@/exports";
+import { useModel, useNavigate, useRequest } from "@@/exports";
 import { Constants } from "@/constants";
 import { logoutUser } from "@/service/auth";
 import { toLogin } from "@/utils/helpers";
@@ -11,6 +11,7 @@ import borrowing from "@/assets/domain/borrow.svg";
 import reservation from "@/assets/domain/reserve.svg";
 import history from "@/assets/domain/history.svg";
 import reservationApplication from "@/assets/domain/reserve-application.svg";
+import { getSystemSettingsMap } from "@/service/systemSettings";
 
 type props = {};
 export type MyPageProps = props;
@@ -18,11 +19,12 @@ export const MyPage: React.FC<React.PropsWithChildren<MyPageProps>> = memo(
   (props) => {
     const globalModel = useModel("@@initialState");
     const navigate = useNavigate();
+
     return (
       <div className={styles.myPage}>
         <div className={styles.header}>
           <Image src={avator} width={60}></Image>
-          {globalModel.initialState.user ? (
+          {globalModel.initialState?.user ? (
             <Space
               direction={"vertical"}
               style={{ "--gap": "3px" }}
@@ -35,10 +37,15 @@ export const MyPage: React.FC<React.PropsWithChildren<MyPageProps>> = memo(
                       {Constants.User.UserRoleMapToText[role]}
                     </Tag>
                   ))}
+                  {globalModel.initialState.user.defaultTimes ? (
+                    <Tag color={"danger"} style={{ padding: 5 }} round>
+                      违约{globalModel.initialState.user.defaultTimes}次
+                    </Tag>
+                  ) : undefined}
                 </Space>
               </div>
               <div className={styles.name}>
-                {globalModel.initialState?.user?.email}
+                {globalModel.initialState?.user?.email}{" "}
               </div>
             </Space>
           ) : (
