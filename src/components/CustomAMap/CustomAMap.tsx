@@ -53,7 +53,6 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
 
     const { location: currentLocation } = locationService;
     const setCurrent = (longitude?: number, latitude?: number) => {
-      console.log(longitude, latitude);
       if (longitude && latitude) {
         const center = new AMap.LngLat(longitude, latitude);
         currentLocationMarker.setPosition(center);
@@ -128,7 +127,7 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
     };
 
     useEffect(() => {
-      if (library) toPoint(library);
+      if (library && !selectedLibrary) toPoint(library);
     }, [library]);
     return (
       <div style={{ position: "relative", height: "100%" }}>
@@ -213,8 +212,9 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
             </Space>
             <br />
             <br />
-            <div style={{ maxHeight: 300, overflow: "auto" }}>
+            <div>
               <CheckList
+                style={{ maxHeight: 300, overflow: "auto" }}
                 defaultValue={
                   selectedLibrary
                     ? [selectedLibrary.id]
@@ -264,6 +264,28 @@ export const CustomAMap: React.FC<React.PropsWithChildren<CustomAMapProps>> =
                   );
                 })}
               </CheckList>
+            </div>
+            <div
+              style={{
+                padding: 12,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+              onClick={() => {
+                const center = new AMap.LngLat(
+                  currentLocation?.coords.longitude,
+                  currentLocation?.coords.latitude
+                );
+                MapRef.current?.setCenter(center);
+                MapRef.current?.setZoom(12);
+              }}
+            >
+              <img
+                src="https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png"
+                height="25"
+              />
+              我的位置
             </div>
           </div>
         ) : undefined}
