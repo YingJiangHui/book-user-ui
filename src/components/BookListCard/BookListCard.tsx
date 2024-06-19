@@ -51,7 +51,21 @@ export const BookListCard: React.FC<
         />
       </div>
       <div className="book-list-card__content">
-        <h4 className={"book-list-card__title"}>{title}</h4>
+        {direction === "column" ? (
+          <h4
+            style={{
+              maxWidth: imageWidth + 48,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            className={"book-list-card__title"}
+          >
+            {title}
+          </h4>
+        ) : (
+          <h4 className={"book-list-card__title"}>{title}</h4>
+        )}
         {showGaveFieldsOnly ? (
           <>
             {fields.map((item) => {

@@ -15,6 +15,7 @@ import {
 import { BookListCardForReservationApplication } from "@/components/BookListCard/BookListCardForReservationApplication";
 import { None } from "@/components/None/None";
 import { RightOutline } from "antd-mobile-icons";
+import { getSystemSettingsMap } from "@/service/systemSettings";
 
 type props = {};
 export type ReservationApplicationProps = props;
@@ -29,6 +30,8 @@ export const ReservationApplication: React.FC<
   if (!reservationsReq.data?.length) {
     return <None />;
   }
+  const systemSettingsMapReq = useRequest(getSystemSettingsMap);
+
   return (
     <Form
       form={form}
@@ -58,6 +61,7 @@ export const ReservationApplication: React.FC<
         >
           {reservationsReq.data?.map((item) => (
             <BookListCardForReservationApplication
+              systemSettingsMapReq={systemSettingsMapReq}
               actions={
                 <>
                   {["NOTIFIED", "PENDING"].includes(item.status) ? (

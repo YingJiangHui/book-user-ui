@@ -12,16 +12,16 @@ import { getSystemSettingsMap } from "@/service/systemSettings";
 type props = {
   data: API.ReservationApplication.Instance;
   actions?: React.ReactNode;
+  systemSettingsMapReq: any;
 };
 export type BookListCardReservationProps = props &
   React.HTMLAttributes<HTMLDivElement>;
 export const BookListCardForReservationApplication: React.FC<
   React.PropsWithChildren<BookListCardReservationProps>
 > = memo((props) => {
-  const { data, actions, ...rest } = props;
+  const { data, systemSettingsMapReq, actions, ...rest } = props;
   const nav = useNavigate();
   const { title, files, author, publishedYear, library, isbn } = data.book;
-  const systemSettingsMapReq = useRequest(getSystemSettingsMap);
 
   const diffDisplay = useMemo(() => {
     switch (data.status) {

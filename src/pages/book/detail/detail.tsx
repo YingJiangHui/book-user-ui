@@ -1,8 +1,9 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
-import { useNavigate, useParams, useRequest } from "@@/exports";
-import { getBook } from "@/service/book";
+import { useModel, useNavigate, useParams, useRequest } from "@@/exports";
+import { getBook, getBooks } from "@/service/book";
 import {
   Button,
+  Divider,
   Image,
   ImageViewer,
   List,
@@ -18,15 +19,46 @@ import { useUserLocationInRange } from "@/hooks/useUserLocationInRange";
 import { addBookShelf } from "@/service/bookShelf";
 import { reservationBookApply } from "@/service/reservationApplication";
 import { libraryAuthTextFeedback } from "@/utils/feedback";
+import { BookListCard } from "@/components/BookListCard/BookListCard";
+import { RightOutline } from "antd-mobile-icons";
 type props = {};
 export type BookDetailProps = props;
 export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
   memo((props) => {
     const params = useParams<{ id: string }>();
-    console.log(params.id);
-    const bookReq = useRequest(getBook, {
-      defaultParams: [{ id: params.id! }],
+    const { librarySearcher } = useModel("currentLibraryModel");
+    const { initialState } = useModel("@@initialState");
+    const bookReq = useRequest(() => getBook({ id: params.id! }), {
+      refreshDeps: [params.id],
+      onSuccess: (book) => {
+        sameCategoryBooks.run(book.categoryId);
+        sameTitleBooks.run(book.title);
+      },
     });
+    const sameCategoryBooks = useRequest(
+      (categoryId: number) =>
+        getBooks({
+          current: 1,
+          pageSize: 5,
+          categoryId: categoryId,
+          firstLibraryId: librarySearcher?.id,
+        }),
+      {
+        manual: true,
+      }
+    );
+    const sameTitleBooks = useRequest(
+      (title: string) =>
+        getBooks({
+          current: 1,
+          pageSize: 5,
+          title: title,
+          firstLibraryId: librarySearcher?.id,
+        }),
+      {
+        manual: true,
+      }
+    );
     const userLocationInRange = useUserLocationInRange(
       bookReq.data?.library.latitude,
       bookReq.data?.library.longitude,
@@ -34,6 +66,12 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
     );
     const navigate = useNavigate();
     const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
+    const sameOtherCategoryBooks = sameCategoryBooks.data?.data?.filter(
+      (item) => item.id !== bookReq.data?.id
+    );
+    const sameOtherTitleBooks = sameTitleBooks.data?.data?.filter(
+      (item) => item.id !== bookReq.data?.id
+    );
     const ActionUI = useMemo(() => {
       const addBookToBookList = () => {
         addBookShelf({ bookId: params.id! }).then(() => {
@@ -91,7 +129,10 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
           />
         );
       }
-      if (bookReq.data?.borrowing || bookReq.data?.reservationApplications?.length) {
+      if (
+        bookReq.data?.borrowing ||
+        bookReq.data?.reservationApplications?.length
+      ) {
         return (
           <PageActions
             description={
@@ -110,7 +151,10 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 加入书架
               </Button>,
               <Button
-                disabled={bookReq.data?.library.disableReserveApplication}
+                disabled={
+                  bookReq.data?.library.disableReserveApplication ||
+                  bookReq.data.borrowing?.userId === initialState?.user?.id
+                }
                 color={"primary"}
                 style={{ borderRadius: "0px" }}
                 onClick={async () => {
@@ -131,9 +175,10 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       if (userLocationInRange.isInRange) {
         return (
           <PageActions
-            description={
-              libraryAuthTextFeedback(bookReq.data?.library, "disableBorrow")
-            }
+            description={libraryAuthTextFeedback(
+              bookReq.data?.library,
+              "disableBorrow"
+            )}
             actions={[
               <Button
                 color={"primary"}
@@ -184,7 +229,12 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
           />
         );
       }
-    }, [userLocationInRange, bookReq.data, bookReq.loading]);
+    }, [
+      userLocationInRange,
+      bookReq.data,
+      bookReq.loading,
+      initialState?.user?.id,
+    ]);
     return (
       <>
         <div className={styles.bookDetail}>
@@ -247,6 +297,95 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
             }}
           />
         </div>
+        <div style={{ padding: "0 12px" }}>{<Divider>更多推荐</Divider>}</div>
+
+        {sameOtherTitleBooks?.length && bookReq.data?.borrowing ? (
+          <div style={{ background: "#fff" }}>
+            <div className={"panel-subheader"}>
+              <div className={"panel-subheader__title"}>同名书籍</div>
+              <div
+                className={"panel-subheader__extra"}
+                onClick={() => {
+                  navigate(`/search?keyword=${bookReq.data?.title}`);
+                }}
+              >
+                搜索更多
+                <RightOutline />
+              </div>
+            </div>
+            <Space
+              style={{
+                overflow: "auto",
+                "--gap": "0px",
+                width: "100%",
+                background: "#fff",
+              }}
+              wrap={false}
+            >
+              {sameOtherTitleBooks?.map((book, index) => (
+                <BookListCard
+                  onClick={() => {
+                    navigate(`/books/${book?.id}`);
+                  }}
+                  showGaveFieldsOnly
+                  direction={"column"}
+                  data={{
+                    title: book?.title,
+                    files: book?.files,
+                    library: book.library,
+                  }}
+                />
+              ))}
+            </Space>
+          </div>
+        ) : undefined}
+        {sameOtherCategoryBooks?.length ? (
+          <div style={{ background: "#fff" }}>
+            <div className={"panel-subheader"}>
+              <div
+                className={"panel-subheader__title"}
+                style={{ fontWeight: "normal" }}
+              >
+                相似书籍
+              </div>
+              <div
+                className={"panel-subheader__extra"}
+                onClick={() => {
+                  navigate(`/category?activeKey=${bookReq.data?.categoryId}`);
+                }}
+              >
+                更多
+                <RightOutline />
+              </div>
+            </div>
+            <Space
+              style={{
+                overflow: "auto",
+                "--gap": "0px",
+                width: "100%",
+                background: "#fff",
+              }}
+              wrap={false}
+            >
+              {sameOtherCategoryBooks
+                ?.filter((item) => item.id !== bookReq.data?.id)
+                .map((book, index) => (
+                  <BookListCard
+                    onClick={() => {
+                      navigate(`/books/${book?.id}`);
+                    }}
+                    showGaveFieldsOnly
+                    direction={"column"}
+                    data={{
+                      title: book?.title,
+                      files: book?.files,
+                      library: book.library,
+                    }}
+                  />
+                ))}
+            </Space>
+          </div>
+        ) : undefined}
         {ActionUI}
       </>
     );
