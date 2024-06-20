@@ -11,13 +11,13 @@ import {
 import { confirmToContinue } from "@/utils/feedback";
 import { None } from "@/components/None/None";
 import { PageLoading } from "@/components/PageLoading";
+import { delay } from "@/utils/utils";
 
 type props = {};
 export type ShelfPageProps = props;
 export const ShelfPage: React.FC<React.PropsWithChildren<ShelfPageProps>> =
   memo((props) => {
-    const bookShelfReq = useRequest(getBookShelf);
-    console.log(bookShelfReq.data, "bookShelfReq");
+    const bookShelfReq = useRequest(() => getBookShelf);
     const navigate = useNavigate();
     const borrowBook = (values: LibraryShelfFormValues) => {
       navigate({
@@ -40,9 +40,9 @@ export const ShelfPage: React.FC<React.PropsWithChildren<ShelfPageProps>> =
       bookShelfReq.refresh();
     };
 
-    if (bookShelfReq.loading) {
-      return <PageLoading />;
-    }
+    // if (bookShelfReq.loading) {
+    //   return <PageLoading />;
+    // }
 
     if (!bookShelfReq.data?.length) {
       return <None />;

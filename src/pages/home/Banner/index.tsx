@@ -3,6 +3,7 @@ import { Image, Swiper } from "antd-mobile";
 import { FallbackBookImage } from "@/components/FallbackBookImage";
 import { useModel, useNavigate, useRequest } from "@@/exports";
 import { getBooks } from "@/service/book";
+import { delay } from "@/utils/utils";
 
 type props = {};
 export type HomeBannerProps = props;

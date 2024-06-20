@@ -7,6 +7,7 @@ import { getBooksByCategory, getCategories } from "@/service/categroy";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
 import { Grid, Skeleton } from "antd-mobile";
 import { PageLoading } from "@/components/PageLoading";
+import { delay } from "@/utils/utils";
 
 type props = { data: API.Category.Instance };
 export type CategoryBooksProps = props;
@@ -17,15 +18,15 @@ export const CategoryBooks: React.FC<
   const { librarySearcher } = useModel("currentLibraryModel");
 
   const { data } = props;
-  useRequest(getCategories);
   const booksByCategoryReq = useRequest(
     () =>
-      getBooksByCategory({
-        id: data.id,
-        firstLibraryId: librarySearcher?.id,
-      }),
+      delay(300).then(() =>
+        getBooksByCategory({
+          id: data.id,
+          firstLibraryId: librarySearcher?.id,
+        })
+      ),
     {
-      loadingDelay: 200,
       cacheKey: `CategoryBooks${data.id}${librarySearcher?.id}`,
       refreshDeps: [data.id, librarySearcher?.id],
     }

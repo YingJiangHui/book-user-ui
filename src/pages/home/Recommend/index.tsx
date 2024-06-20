@@ -5,6 +5,7 @@ import classNames from "classnames";
 import styles from "./index.less";
 import { List } from "antd-mobile";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
+import { delay } from "@/utils/utils";
 
 type props = {};
 export type RecommendBooksProps = props;
@@ -15,14 +16,15 @@ export const RecommendBooks: React.FC<
   const navigate = useNavigate();
   const recommendBooksReq = useRequest(
     () =>
-      getBooks({
-        current: 1,
-        pageSize: 5,
-        isRecommend: true,
-        firstLibraryId: librarySearcher?.id,
-      }),
+      delay(300).then(() =>
+        getBooks({
+          current: 1,
+          pageSize: 5,
+          isRecommend: true,
+          firstLibraryId: librarySearcher?.id,
+        })
+      ),
     {
-      cacheKey: "RecommendBooks",
       refreshDeps: [librarySearcher?.id],
     }
   );

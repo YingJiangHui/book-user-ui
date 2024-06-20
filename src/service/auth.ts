@@ -7,7 +7,7 @@ export type LoginReq = {
 export const postLogin = (params: LoginReq) =>
   request<API.Common.Result<string>>("/api/auth/login", {
     data: params,
-    method: "POST",
+    skipErrorHandler: true,
   });
 
 export type RegisterReq = {
@@ -35,7 +35,7 @@ export const resetPassword = (params: resetPasswordReq) =>
   });
 
 export const logoutUser = () => {
-    return request('/api/auth/logout', {
-        method: 'POST',
-    });
+  return request("/api/auth/logout", {
+    method: "POST",
+  });
 };

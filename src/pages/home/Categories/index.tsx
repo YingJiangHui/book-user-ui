@@ -13,14 +13,15 @@ export const CategoriesBooks: React.FC<
   React.PropsWithChildren<CategoriesBooksProps>
 > = memo((props) => {
   const { librarySearcher } = useModel("currentLibraryModel");
-
   const categoriesReq = useRequest(
-    () =>
-      getCategories({
+    () => {
+      console.log("action--");
+      return getCategories({
         current: 1,
         pageSize: 5,
         firstLibraryId: librarySearcher?.id,
-      }),
+      });
+    },
     {
       cacheKey: "CategoriesBooks",
       loadingDelay: 200,
