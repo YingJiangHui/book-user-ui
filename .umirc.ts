@@ -139,6 +139,7 @@ export default defineConfig({
     },
   ],
   npmClient: "pnpm",
+  https:{},
   proxy: {
 
     "/api": {

@@ -33,7 +33,7 @@ export const BookListCardBorrowing: React.FC<
       case "OVERDUE_RETURNED":
         return { text: `已归还（逾期归还）`, color: "success" };
     }
-  }, [data.borrowedAt, data.status]);
+  }, [data.borrowedAt, data.status,data.expectedReturnAt]);
   return (
     <div className={classNames("book-list-card")} {...rest}>
       <div className="book-list-card__cover">

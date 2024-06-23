@@ -64,6 +64,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       bookReq.data?.library.longitude,
       bookReq.data?.library.longitude
     );
+    console.log(userLocationInRange.isInRange,'.isInRange')
     const navigate = useNavigate();
     const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
     const sameOtherCategoryBooks = sameCategoryBooks.data?.data?.filter(

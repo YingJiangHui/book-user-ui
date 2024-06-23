@@ -27,10 +27,11 @@ export const ReservationApplication: React.FC<
   const userLocationInRange = useUserLocationInRange();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const systemSettingsMapReq = useRequest(getSystemSettingsMap);
+
   if (!reservationsReq.data?.length) {
     return <None />;
   }
-  const systemSettingsMapReq = useRequest(getSystemSettingsMap);
 
   return (
     <Form

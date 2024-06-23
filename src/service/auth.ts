@@ -8,6 +8,7 @@ export const postLogin = (params: LoginReq) =>
   request<API.Common.Result<string>>("/api/auth/login", {
     data: params,
     skipErrorHandler: true,
+      method:"POST"
   });
 
 export type RegisterReq = {

@@ -281,7 +281,7 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
             }
 
             const max = dayjs(borrowedRange.min).add(90, "days").toDate();
-            const min = dayjs(returnedRange.max).toDate();
+            const min = dayjs(returnedRange.max).add(1,'days').toDate();
             const renewBookUI = (
               <Form.Item
                 noStyle
@@ -310,7 +310,7 @@ export const Borrowing: React.FC<React.PropsWithChildren<BorrowingProps>> =
                             borrowingIds: borrowingIds,
                             expectedReturnAt: expectedReturnAt.toISOString(),
                           }).then(() => {
-                            Toast.show("归还成功");
+                            Toast.show("续借成功");
                             form.resetFields();
                             calendarRef.current?.close();
                             borrowingsReq.reload();
