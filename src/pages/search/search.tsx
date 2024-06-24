@@ -56,7 +56,7 @@ export const Search: React.FC<React.PropsWithChildren<SearchProps>> = memo(
           ref={ref}
           loading={searchBookReq.loading}
           form={form}
-          placeholder={"搜索图书"}
+          placeholder={"书名、作者、ISBN"}
           onValuesChange={(changedValues, values) => {
             if (!changedValues.keyword) {
               searchBookReq.reload();
