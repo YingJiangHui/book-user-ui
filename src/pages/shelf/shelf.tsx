@@ -17,7 +17,7 @@ type props = {};
 export type ShelfPageProps = props;
 export const ShelfPage: React.FC<React.PropsWithChildren<ShelfPageProps>> =
   memo((props) => {
-    const bookShelfReq = useRequest(() => getBookShelf);
+    const bookShelfReq = useRequest(() => getBookShelf());
     const navigate = useNavigate();
     const borrowBook = (values: LibraryShelfFormValues) => {
       navigate({
