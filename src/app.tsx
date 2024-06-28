@@ -39,7 +39,6 @@ export const request: RequestConfig = {
         | API.Common.Result<unknown>
         | undefined;
       if (opts?.skipErrorHandler) throw error;
-
       const statusMap: Record<number, () => any> = {
         401: () => (
           <Space>
@@ -61,7 +60,6 @@ export const request: RequestConfig = {
       ) {
         throw error.response.data;
       }
-
       if (React.isValidElement(result)) {
         Toast.show({
           content: result,

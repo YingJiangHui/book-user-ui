@@ -3,6 +3,7 @@ import styles from "./index.less";
 import { FloatingBubble, NavBar, SafeArea, TabBar } from "antd-mobile";
 import shujia from "../assets/shujia.svg";
 import shujia_primary from "../assets/shujia-primary.svg";
+import home from "../assets/home.svg";
 import {
   UnorderedListOutline,
   ContentOutline,
@@ -58,6 +59,7 @@ export default function Layout() {
           borderBottom: "1px solid rgba(0,0,0,0.1)",
         }}
         onBack={() => navigate(-1)}
+        right={<img height={24} src={home} onClick={()=>navigate("/")}/>}
       >
         {/*@ts-ignore*/}
         {title}

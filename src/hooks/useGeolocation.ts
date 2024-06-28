@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {storage} from "@/utils/store";
 
 export const useGeolocation = (deps: React.DependencyList) => {
   const [location, setLocation] = useState<GeolocationPosition | null>(null);
@@ -30,8 +31,18 @@ export const useGeolocation = (deps: React.DependencyList) => {
       geolocation.getCurrentPosition(function(status,result){
         if(status=='complete'){
           // onComplete(result)
-          console.log(result,'result');
           //
+          const mockCoords = storage.get('mock-coords')||"30.293948,120.167007"
+          if(mockCoords){
+            const [lat,lng] = mockCoords.split(",")
+            setLocation({
+              coords:{
+                latitude: Number(lat),
+                longitude: Number(lng),
+              }
+            })
+            return;
+          }
           setLocation({
             coords:{
               latitude: result.position.lat,
@@ -40,6 +51,17 @@ export const useGeolocation = (deps: React.DependencyList) => {
           })
           // console.log(position_ie);
         }else{
+          const mockCoords = storage.get('mock-coords')||"30.293948,120.167007"
+          if(mockCoords){
+            const [lat,lng] = mockCoords.split(",")
+            setLocation({
+              coords:{
+                latitude: Number(lat),
+                longitude: Number(lng),
+              }
+            })
+            return;
+          }
           console.log(result,'result')
           setError(result)
           // onError(result)

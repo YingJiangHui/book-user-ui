@@ -121,21 +121,6 @@ export const LibraryShelfForm: React.FC<
                   </Button>,
                   <Button
                     disabled={
-                      !form.getFieldValue("shelf")?.length ||
-                      data.disableReserve
-                    }
-                    type={"submit"}
-                    color={"primary"}
-                    style={{ borderRadius: "0px" }}
-                    onClick={() => {
-                      form.setFieldsValue({ actionType: "RESERVE" });
-                    }}
-                    fill={"outline"}
-                  >
-                    预订图书
-                  </Button>,
-                  <Button
-                    disabled={
                       !form.getFieldValue("shelf")?.length || data.disableBorrow
                     }
                     type={"submit"}
