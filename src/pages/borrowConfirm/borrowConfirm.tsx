@@ -9,12 +9,12 @@ import {
 } from "antd-mobile";
 import { SelectDate } from "@/components/FormFields/SelectDate";
 import dayjs from "dayjs";
-import { useRequest } from "ahooks";
 import { borrowBook, getBooks } from "@/service/book";
-import { history, useNavigate, useSearchParams } from "@@/exports";
+import {history, useNavigate, useRequest, useSearchParams} from "@@/exports";
 import { BookListCard } from "@/components/BookListCard/BookListCard";
 import { PageLoading } from "@/components/PageLoading";
 import { Calendar } from "@/components/CalendarSelect";
+import {getSystemSettingsMap} from "@/service/systemSettings";
 
 type props = {};
 export type borrowConfirmProps = props;
@@ -26,6 +26,11 @@ export const borrowConfirm: React.FC<
   React.PropsWithChildren<borrowConfirmProps>
 > = memo((props) => {
   const [searchParams] = useSearchParams();
+  const systemSettings = useRequest(getSystemSettingsMap);
+
+  const defaultDate = useMemo(()=>dayjs().add(systemSettings.data?.DEFAULT_BORROW_DAYS||45, "day").toDate(),[systemSettings.data?.DEFAULT_BORROW_DAYS]) ;
+  const maxDate = useMemo(()=>dayjs().add(systemSettings.data?.MAX_BORROW_DAYS||60, "days").toDate(),[systemSettings.data?.MAX_BORROW_DAYS]);
+
   console.log(searchParams.getAll("bookIds"), 'searchParams.get("bookIds")');
   const booksReq = useRequest(getBooks, {
     defaultParams: [{ ids: searchParams.getAll("bookIds") }],
@@ -99,9 +104,9 @@ export const borrowConfirm: React.FC<
         }}
       >
         <div className={"adm-list-header"}>
-          共 <b>{booksReq.data?.data?.data.length}</b> 本
+          共 <b>{booksReq.data?.data?.length}</b> 本
         </div>
-        {booksReq.data?.data?.data?.map((item) => {
+        {booksReq.data?.data?.map((item) => {
           return (
             <BookListCard
               key={item.id}
