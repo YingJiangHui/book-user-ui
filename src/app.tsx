@@ -30,7 +30,7 @@ export async function getInitialState(): Promise<System.InitialState> {
 
 export const request: RequestConfig = {
   paramsSerializer: (params) => stringify(params, { arrayFormat: "brackets" }),
-  timeout: 2000,
+  timeout: 5000,
   // other axios options you want
   errorConfig: {
     errorHandler(error: any, opts) {

@@ -21,6 +21,7 @@ export const BooksList: React.FC<React.PropsWithChildren<BooksListProps>> =
     const booksByCategoryReq = useInfiniteScroll((currentData) => {
       const current = (currentData?.current || 0) + 1;
       const pageSize = currentData?.pageSize || 10;
+      if (!categoryId) return Promise.reject("id is none");
       return getBooksByCategoryPagination({
         id: categoryId,
         firstLibraryId: librarySearcher?.id,
