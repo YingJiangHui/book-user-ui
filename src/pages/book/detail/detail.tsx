@@ -64,7 +64,6 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
       bookReq.data?.library.longitude,
       bookReq.data?.library.longitude
     );
-    console.log(userLocationInRange.isInRange,'.isInRange')
     const navigate = useNavigate();
     const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
     const sameOtherCategoryBooks = sameCategoryBooks.data?.data?.filter(
@@ -160,6 +159,7 @@ export const BookDetail: React.FC<React.PropsWithChildren<BookDetailProps>> =
                 style={{ borderRadius: "0px" }}
                 onClick={async () => {
                   await reservationBookApply({ bookId: params.id! });
+                  navigate("/reservation-application")
                   Toast.show({
                     content:
                       "已为您预约此书籍，取书时间会已邮件形式通知，请按时取书！",

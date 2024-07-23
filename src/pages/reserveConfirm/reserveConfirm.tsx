@@ -4,10 +4,10 @@ import {
   DatePicker,
   DatePickerRef,
   Form,
-  List,
+  List, Space,
   Toast,
 } from "antd-mobile";
-import { useNavigate, useRouteData, useSearchParams } from "@@/exports";
+import {Link, useNavigate, useRouteData, useSearchParams} from "@@/exports";
 import { useRequest } from "ahooks";
 import { borrowBook, getBooks, reserveBook } from "@/service/book";
 import { PageLoading } from "@/components/PageLoading";
@@ -44,8 +44,8 @@ export const reserveConfirm: React.FC<
           expectedReturnAt: dayjs(expectedReturnAt).endOf("day").toISOString(),
           from: searchParams.get("from") || undefined,
         });
-        Toast.show({ icon: "success", content: "预订成功" });
-        navigate(-1);
+        Toast.show({ icon: "success", content: "预订成功，已跳转到预订界面" });
+        navigate('/reservation');
       }}
       footer={
         <Button block type="submit" color="primary" size="large">

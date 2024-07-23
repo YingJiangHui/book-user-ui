@@ -17,7 +17,7 @@ export const BookListCardReservation: React.FC<
   const { data, ...rest } = props;
   const { title, files, author, publishedYear, library, isbn } = data.book;
   const diffDisplay = useMemo(() => {
-    const d = dayjs(data.borrowedAt).diff(new Date(), "day");
+    const d = dayjs(data.borrowedAt).add(1).diff(new Date(), "day");
 
     switch (data.status) {
       case "BORROWABLE":

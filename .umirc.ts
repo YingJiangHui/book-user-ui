@@ -22,9 +22,7 @@ export default defineConfig({
       src: "https://webapi.amap.com/maps?v=2.0&key=afbb14d219ab8177546eae44a24daa91",
     }
   ],
-  // scripts: [
-  //   "https://webapi.amap.com/maps?v=2.0&key=afbb14d219ab8177546eae44a24daa91",
-  // ],
+
   links: [
     { rel: 'icon', href: '/book.svg' },
   ],
@@ -142,7 +140,7 @@ export default defineConfig({
     },
   ],
   npmClient: "pnpm",
-  https:{},
+  // https:{},
   proxy: {
 
     "/api": {

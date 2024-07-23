@@ -7,7 +7,7 @@ export type LoginReq = {
 export const postLogin = (params: LoginReq) =>
   request<API.Common.Result<string>>("/api/auth/login", {
     data: params,
-    skipErrorHandler: true,
+    // skipErrorHandler: true,
       method:"POST"
   });
 
